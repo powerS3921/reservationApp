@@ -17,6 +17,7 @@ import FieldReservationList from "./pages/FieldReservationList";
 import AddField from "./pages/AddField";
 import AddFieldReservation from "./pages/AddFieldReservation";
 import HomeLogged from "./pages/HomeLogged";
+import EditField from "./pages/EditField";
 
 function App() {
   const [authState, setAuthState] = useState({ username: "", id: "", status: false });
@@ -101,6 +102,7 @@ function App() {
             <Route path="/field-reservations/:id" element={<FieldReservationList />} />
             <Route path="/add-field" element={<AddField />} />
             <Route path="/add-field-reservation/:id" element={<AddFieldReservation />} />
+            <Route path="/edit-field/:id" element={<EditField />} />
           </Routes>
         </Router>
       </AuthContext.Provider>
