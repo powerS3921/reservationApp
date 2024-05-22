@@ -44,7 +44,7 @@
 
 const express = require("express");
 const router = express.Router();
-const { Field } = require("../models");
+const { Field, Reservation } = require("../models");
 
 /**
  * @swagger
@@ -152,6 +152,7 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   const id = req.params.id;
+  await Reservation.destroy({ where: { FieldId: id } });
   await Field.destroy({ where: { id } });
   res.json({ success: true });
 });

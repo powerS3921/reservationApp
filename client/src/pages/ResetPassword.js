@@ -38,19 +38,23 @@ const ChangePassword = () => {
   };
 
   return (
-    <div className="changePasswordContainer">
-      <h2>Change Password</h2>
+    <div className="mainWrapper mainWrapperLogin">
+      <h2 className="h1Header">Change Password</h2>
       {errorMessage && <p className="errorMessage">{errorMessage}</p>}
       {successMessage && <p className="successMessage">{successMessage}</p>}
-      <label htmlFor="username">Username: </label>
-      <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <label htmlFor="oldPassword">Old Password: </label>
-      <input type="password" id="oldPassword" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} />
-      <label htmlFor="newPassword">New Password: </label>
-      <input type="password" id="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-      <label htmlFor="confirmNewPassword">Confirm New Password: </label>
-      <input type="password" id="confirmNewPassword" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} />
-      <button onClick={handleChangePassword}>Change Password</button>
+      <div className="wrapperInput">
+        <label htmlFor="username">Username: </label>
+        <input className="defaultInput" type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <label htmlFor="oldPassword">Old Password: </label>
+        <input className="defaultInput" type="password" id="oldPassword" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} />
+        <label htmlFor="newPassword">New Password: </label>
+        <input className="defaultInput" type="password" id="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+        <label htmlFor="confirmNewPassword">Confirm New Password: </label>
+        <input className="defaultInput" type="password" id="confirmNewPassword" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} />
+        <button onClick={handleChangePassword} className="button">
+          Change Password
+        </button>
+      </div>
     </div>
   );
 };

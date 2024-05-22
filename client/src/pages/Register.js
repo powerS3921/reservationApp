@@ -38,19 +38,21 @@ const Register = () => {
       });
   };
   return (
-    <div className="registrationContainer">
+    <div className="mainWrapper mainWrapperLogin">
       <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
-        <Form className="formContainer">
-          <label htmlFor="email">E-mail:</label>
+        <Form className="wrapperInput">
+          <label htmlFor="email">E-mail</label>
           <ErrorMessage name="email" component="span" />
-          <Field autoComplete="off" id="inputEmail" name="email" placeholder="(Ex. John123@wp.pl)" />
-          <label htmlFor="username">Username:</label>
+          <Field className="defaultInput" autoComplete="off" id="inputEmail" name="email" placeholder="(Ex. John123@wp.pl)" />
+          <label htmlFor="username">Username</label>
           <ErrorMessage name="username" component="span" />
-          <Field autoComplete="off" id="inputUsername" name="username" placeholder="(Ex. John123..)" />
-          <label htmlFor="password">Paswword:</label>
+          <Field className="defaultInput" autoComplete="off" id="inputUsername" name="username" placeholder="(Ex. John123..)" />
+          <label htmlFor="password">Password</label>
           <ErrorMessage name="password" component="span" />
-          <Field type="password" autoComplete="off" id="inputPassword" name="password" placeholder="(Password..)" />
-          <button type="submit">Register</button>
+          <Field className="defaultInput" type="password" autoComplete="off" id="inputPassword" name="password" placeholder="(Password..)" />
+          <button type="submit" className="button">
+            Register
+          </button>
         </Form>
       </Formik>
     </div>

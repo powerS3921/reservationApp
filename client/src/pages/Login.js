@@ -23,28 +23,34 @@ const Login = () => {
     });
   };
   return (
-    <div className="loginContainer">
-      <label htmlFor="login">Login: </label>
-      <input
-        onChange={(e) => {
-          setUsername(e.target.value);
-        }}
-        id="inputLogin"
-        name="login"
-        placeholder="Login..."
-      />
-      <label htmlFor="password">Password: </label>
-      <input
-        onChange={(e) => {
-          setPassword(e.target.value);
-        }}
-        type="password"
-        id="inputPassword"
-        name="password"
-        placeholder="Password..."
-      />
-      <Link to="/resetpassword">Forgot password?</Link>
-      <button onClick={login}>Login</button>
+    <div className="mainWrapper mainWrapperLogin">
+      <div className="wrapperInput">
+        <input
+          className="defaultInput"
+          onChange={(e) => {
+            setUsername(e.target.value);
+          }}
+          id="inputLogin"
+          name="login"
+          placeholder="Login..."
+        />
+        <input
+          className="defaultInput"
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+          type="password"
+          id="inputPassword"
+          name="password"
+          placeholder="Password..."
+        />
+        <Link to="/resetpassword" className="link">
+          Forgot password?
+        </Link>
+        <button onClick={login} className="button">
+          Login
+        </button>
+      </div>
     </div>
   );
 };

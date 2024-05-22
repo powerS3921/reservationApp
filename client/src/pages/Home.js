@@ -13,19 +13,19 @@ const Home = () => {
   }, [id]);
 
   return (
-    <div>
+    <div className="wrapperHome">
       <h1>Welcome, {username}!</h1>
-      <Link to="/fields">
-        <button>View Fields</button>
+      <Link to={`/fields/${id}`}>
+        <button className="homeButton">View Fields</button>
       </Link>
-      <Link to="/add-field">
-        <button>Add Field</button>
+      <Link to={`/add-field/${id}`}>
+        <button className="homeButton">Add Field</button>
       </Link>
       <Link to={`/field-reservations/${id}`}>
-        <button>View Field Reservations</button>
+        <button className="homeButton">View Field Reservations</button>
       </Link>
       <Link to={`/add-field-reservation/${id}`}>
-        <button>Add Field Reservation</button>
+        <button className="homeButton">Add Field Reservation</button>
       </Link>
     </div>
   );

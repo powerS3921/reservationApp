@@ -18,6 +18,10 @@ import AddField from "./pages/AddField";
 import AddFieldReservation from "./pages/AddFieldReservation";
 import HomeLogged from "./pages/HomeLogged";
 import EditField from "./pages/EditField";
+import EditFieldReservation from "./pages/EditFieldReservation";
+import "./style/FieldList.css";
+import "./style/Home.css";
+import "./style/AddField.css";
 
 function App() {
   const [authState, setAuthState] = useState({ username: "", id: "", status: false });
@@ -98,11 +102,12 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/offert" element={<Offert />} />
             <Route path="/resetpassword" element={<ResetPassword />} />
-            <Route path="/fields" element={<FieldList />} />
+            <Route path="/fields/:userId" element={<FieldList />} />
             <Route path="/field-reservations/:id" element={<FieldReservationList />} />
-            <Route path="/add-field" element={<AddField />} />
+            <Route path="/add-field/:id" element={<AddField />} />
             <Route path="/add-field-reservation/:id" element={<AddFieldReservation />} />
-            <Route path="/edit-field/:id" element={<EditField />} />
+            <Route path="/edit-field/:id/:userId" element={<EditField />} />
+            <Route path="/edit-reservation/:id" element={<EditFieldReservation />} />
           </Routes>
         </Router>
       </AuthContext.Provider>

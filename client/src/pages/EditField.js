@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const EditField = () => {
-  const { id } = useParams();
+  const { id, userId } = useParams();
   const location = useLocation();
   const [field, setField] = useState({
     name: "",
     location: "",
     capacity: "",
   });
+  const navigateTo = useNavigate();
 
   useEffect(() => {
     if (location.state?.field) {
@@ -34,6 +35,7 @@ const EditField = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    navigateTo(`/${userId}`);
     axios
       .put(`http://localhost:3001/fields/${id}`, field)
       .then((response) => {
@@ -44,25 +46,17 @@ const EditField = () => {
   };
 
   return (
-    <div>
-      <h1>Edit Field</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Name:
-          <input type="text" name="name" value={field.name} onChange={handleChange} />
-        </label>
-        <br />
-        <label>
-          Location:
-          <input type="text" name="location" value={field.location} onChange={handleChange} />
-        </label>
-        <br />
-        <label>
-          Capacity:
-          <input type="number" name="capacity" value={field.capacity} onChange={handleChange} />
-        </label>
-        <br />
-        <button type="submit">Save</button>
+    <div className="mainWrapper">
+      <h1 className="h1Header">Edit Field</h1>
+      <form onSubmit={handleSubmit} className="wrapperInput">
+        <input className="defaultInput" type="text" name="name" value={field.name} onChange={handleChange} placeholder="Name..." />
+
+        <input className="defaultInput" type="text" name="location" value={field.location} onChange={handleChange} placeholder="Location..." />
+        <input className="defaultInput" type="number" name="capacity" value={field.capacity} onChange={handleChange} placeholder="Size..." />
+
+        <button type="submit" className="button">
+          Save
+        </button>
       </form>
     </div>
   );
