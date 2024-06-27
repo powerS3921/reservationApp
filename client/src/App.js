@@ -59,36 +59,42 @@ function App() {
       <AuthContext.Provider value={{ authState, setAuthState }}>
         <Router>
           <div className="navBar">
-            <div className="leftNavBarLinks">
-              {!authState.status ? (
-                <>
-                  <Link to="/login" className="link" onClick={switchClassActiveToFalse}>
-                    Login
-                  </Link>
-                  <Link to="/register" className="link" onClick={switchClassActiveToFalse}>
-                    Register
-                  </Link>
-                </>
-              ) : (
-                <Link to="/login" className="link" onClick={logout}>
-                  Logout
+            <Link to="/" className="logo">
+              GameGalaxy
+            </Link>
+            <div className="linkAndLogin">
+              <div className={activeClassNav ? "rightNavBarLinks active" : "rightNavBarLinks"}>
+                <Link to={!authState.status ? "/" : `/${authState.id}`} className="link" onClick={switchClassActiveToFalse}>
+                  Home
                 </Link>
-              )}
+                <Link to="/offert" className="link" onClick={switchClassActiveToFalse}>
+                  Offert
+                </Link>
+                <Link to="/galeria" className="link" onClick={switchClassActiveToFalse}>
+                  Gallery
+                </Link>
+                <Link to="/about" className="link" onClick={switchClassActiveToFalse}>
+                  About
+                </Link>
+              </div>
+              <div className="leftNavBarLinks">
+                {!authState.status ? (
+                  <>
+                    <Link to="/login" className="link" onClick={switchClassActiveToFalse}>
+                      Login
+                    </Link>
+                    <Link to="/register" className="link" onClick={switchClassActiveToFalse}>
+                      Register
+                    </Link>
+                  </>
+                ) : (
+                  <Link to="/login" className="link" onClick={logout}>
+                    Logout
+                  </Link>
+                )}
+              </div>
             </div>
-            <div className={activeClassNav ? "rightNavBarLinks active" : "rightNavBarLinks"}>
-              <Link to={!authState.status ? "/" : `/${authState.id}`} className="link" onClick={switchClassActiveToFalse}>
-                Home
-              </Link>
-              <Link to="/offert" className="link" onClick={switchClassActiveToFalse}>
-                Offert
-              </Link>
-              <Link to="/galeria" className="link" onClick={switchClassActiveToFalse}>
-                Gallery
-              </Link>
-              <Link to="/about" className="link" onClick={switchClassActiveToFalse}>
-                About
-              </Link>
-            </div>
+
             <div className="iconNavBar">
               {!activeClassNav ? <MenuIcon onClick={switchClassActive} style={{ fontSize: "30px" }} /> : <CloseIcon onClick={switchClassActive} style={{ fontSize: "30px" }} />}
             </div>

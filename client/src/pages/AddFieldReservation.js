@@ -8,6 +8,7 @@ const AddFieldReservation = () => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [fields, setFields] = useState([]);
+  const [error, setError] = useState(null); // Nowy stan dla błędów
   const navigateTo = useNavigate();
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const AddFieldReservation = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigateTo(`/${id}`);
+    setError(null); // Resetuj błędy przed wysłaniem
     axios
       .post("http://localhost:3001/reservations", {
         fieldId,
@@ -31,15 +32,18 @@ const AddFieldReservation = () => {
       })
       .then((response) => {
         console.log(response.data);
+        navigateTo(`/${id}`); // Przeniesienie na stronę po sukcesie
       })
       .catch((error) => {
         console.error(error);
+        setError(error.response.data.error || "Failed to create reservation."); // Ustawienie błędu
       });
   };
 
   return (
     <form onSubmit={handleSubmit} className="mainWrapper">
       <h1 className="h1Header">Add Field Reservation</h1>
+      {error && <div className="error">{error}</div>} {/* Wyświetlanie błędu */}
       <div className="wrapperInput">
         <label>Field:</label>
         <select className="defaultInput" value={fieldId} onChange={(e) => setFieldId(e.target.value)}>

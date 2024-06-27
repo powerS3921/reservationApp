@@ -34,6 +34,13 @@ const FieldReservationList = () => {
     const options = { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" };
     return new Date(dateTimeString).toLocaleString("en-US", options);
   };
+
+  const isToday = (date) => {
+    const today = new Date();
+    const targetDate = new Date(date);
+    return today.getFullYear() === targetDate.getFullYear() && today.getMonth() === targetDate.getMonth() && today.getDate() === targetDate.getDate();
+  };
+
   return (
     <div className="mainWrapper">
       <h1 className="h1Header">Field Reservations</h1>
@@ -41,9 +48,15 @@ const FieldReservationList = () => {
         {reservations.length > 0 ? (
           reservations.map((reservation) => (
             <li key={reservation.id}>
-              <span>Field ID: {reservation.FieldId}</span> <span>Start: {formatDateTime(reservation.startDate)}</span> <span>End: {formatDateTime(reservation.endDate)}</span>
-              <button onClick={() => handleEdit(reservation)}>Edit</button>
-              <button onClick={() => handleDelete(reservation.id)}>Delete</button>
+              <span>Field ID: {reservation.FieldId}</span>
+              <span>Start: {formatDateTime(reservation.startDate)}</span>
+              <span>End: {formatDateTime(reservation.endDate)}</span>
+              <button onClick={() => handleEdit(reservation)} disabled={isToday(reservation.startDate)}>
+                Edit
+              </button>
+              <button onClick={() => handleDelete(reservation.id)} disabled={isToday(reservation.startDate)}>
+                Delete
+              </button>
             </li>
           ))
         ) : (
