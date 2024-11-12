@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 
-// Load Stripe outside of a component’s render to avoid recreating the object on each render.
-const stripePromise = loadStripe("pk_test_51QIdm2B1QJBWRwyCwAlVxf9Pka47EsCpEZOlijDIhtmcD7giuyufgivfIlIkYPx4CTpVFaj1LExBQwhGsgis1Z3q00x1pLPDrI"); // Replace with your test Stripe public key
+// Inicjalizacja Stripe poza renderem komponentu
+const stripePromise = loadStripe("pk_test_51QIdm2B1QJBWRwyCwAlVxf9Pka47EsCpEZOlijDIhtmcD7giuyufgivfIlIkYPx4CTpVFaj1LExBQwhGsgis1Z3q00x1pLPDrI");
 
 const ConfirmReservationPanel = ({ showNav, userID }) => {
   const location = useLocation();
@@ -13,26 +13,38 @@ const ConfirmReservationPanel = ({ showNav, userID }) => {
   const handlePayment = async () => {
     try {
       const { selectedField, selectedDate, selectedHour } = location.state;
-      const reservationDate = new Date(selectedDate).toISOString(); // Format reservation date
-      const startTime = `${selectedHour}`; // Format start time (e.g., '15')
-      const endTime = `${parseInt(selectedHour) + 1}:00:00`; // Calculate end time (e.g., '16:00')
+      const reservationDate = new Date(selectedDate).toISOString();
+      const startTime = `${selectedHour}`;
+      const endTime = `${parseInt(selectedHour) + 1}:00:00`;
 
-      // Send reservation details to the backend to create a Stripe session
-      const response = await axios.post("http://localhost:3002/create-checkout-session", {
+      // Step 1: Create the reservation in the database
+      const reservationResponse = await axios.post("http://localhost:3001/reservations", {
         fieldId: selectedField.id,
         userId: userID,
         reservationDate,
         startTime,
         endTime,
+        czyZaplacono: false,
+      });
+
+      const reservationId = reservationResponse.data.id;
+
+      // Step 2: Create a Stripe session and pass the reservation ID
+      const sessionResponse = await axios.post("http://localhost:3002/create-checkout-session", {
+        reservationId,
         price: selectedField.price,
       });
 
-      // Get session ID from the response
-      const { sessionId } = response.data;
+      const { sessionId } = sessionResponse.data;
+
+      // Step 3: Update the reservation with the sessionId
+      await axios.put(`http://localhost:3001/reservations/${reservationId}/update-session`, {
+        sessionId,
+      });
 
       // Redirect to Stripe Checkout
       const stripe = await stripePromise;
-      stripe.redirectToCheckout({ sessionId });
+      await stripe.redirectToCheckout({ sessionId });
     } catch (error) {
       console.error("Błąd przy tworzeniu rezerwacji i płatności:", error);
     }

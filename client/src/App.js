@@ -27,6 +27,7 @@ import AddSportFacility from "./pages/AddSportFacility";
 import EditFacilities from "./pages/EditFacilities";
 import SubmitReservation from "./pages/SubmitReservation";
 import ConfirmReservation from "./pages/ConfirmReservation";
+import ConfirmationPage from "./pages/ConfirmationPage";
 
 function App() {
   const [authState, setAuthState] = useState({ username: "", id: "", status: false });
@@ -184,6 +185,7 @@ function App() {
             <Route path="/edit-reservation/:id" element={<EditFieldReservation />} />
             <Route path="/submit-resservation/:id" element={<SubmitReservation showNav={showNav} />} />
             <Route path="/confirm-reservation" element={<ConfirmReservation showNav={showNav} userID={usernameId} />} />
+            <Route path="/confirmation-page" element={<ConfirmationPage />} />
           </Routes>
         </Router>
       </AuthContext.Provider>

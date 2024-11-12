@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false,
       allowNull: false,
     },
+    sessionId: {
+      type: DataTypes.STRING,
+      allowNull: true, // Make this nullable in case a reservation does not involve a Stripe session
+    },
   });
 
   // Associations

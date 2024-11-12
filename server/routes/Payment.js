@@ -8,27 +8,26 @@ app.use(cors());
 
 // Endpoint to create Stripe Checkout session
 app.post("/create-checkout-session", async (req, res) => {
-  const { fieldId, userId, reservationDate, startTime, endTime, price } = req.body;
+  const { reservationId, price } = req.body;
 
   try {
-    // Create a checkout session with the necessary details
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
         {
           price_data: {
-            currency: "pln", // or "usd" if applicable
+            currency: "pln",
             product_data: {
-              name: `Reservation at ${fieldId}`, // Custom product description
+              name: `Reservation for Field ${reservationId}`,
             },
-            unit_amount: price * 100, // Convert price to cents
+            unit_amount: price * 100, // Stripe amount is in cents
           },
           quantity: 1,
         },
       ],
       mode: "payment",
-      success_url: `http://localhost:3000/confirmation-page?session_id={CHECKOUT_SESSION_ID}`, // URL to redirect after payment success
-      cancel_url: `http://localhost:3000/cancel`, // URL to redirect if payment fails or canceled
+      success_url: `http://localhost:3000/confirmation-page?session_id={CHECKOUT_SESSION_ID}`, // Pass session ID in URL
+      cancel_url: `http://localhost:3000/cancel`,
     });
 
     res.json({ sessionId: session.id });
