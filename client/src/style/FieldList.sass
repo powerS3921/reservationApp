@@ -1,0 +1,129 @@
+$color: rgb(147, 17, 0)
+.mainWrapper
+  display: flex
+  align-items: center
+  flex-direction: column
+  width: 100%
+  transition: .3s
+  .h1Header
+    padding: 20px
+    display: flex
+    align-items: center
+    flex-direction: column
+    &::after
+      height: 5px
+      width: 20px
+      background-color: rgb(147, 17, 0)
+      content: ""
+      display: block
+      margin-top: 20px
+  .filters
+    display: flex
+    flex-direction: column
+    padding: 20px
+    justify-content: center
+    align-items: center
+    .filterLabel
+      margin: 10px 0
+      text-align: center
+      .filterCaption
+        font-size: 20px
+        margin-bottom: 10px
+      .filterSelect
+        font-size: 15px
+        padding: 10px 20px
+        cursor: pointer
+        .filterOption
+    .adminButton
+      padding: 10px 20px
+      background-color: white
+      border: 1px solid rgb(147, 17, 0)
+      cursor: pointer
+      width: 50%
+      margin-top: 20px
+      transition: .3s
+      border-radius: 20px
+      &:hover
+        background-color: rgb(147, 17, 0)
+        color: white
+  .listOfFields
+    list-style-type: none
+    display: flex
+    width: 80%
+    padding: 50px
+    flex-wrap: wrap
+    justify-content: center
+    align-items: center
+    .loadingParagraph
+    .fieldsParagraph
+    .fieldContainer
+      display: flex
+      flex-direction: column
+      flex-basis: calc(25% - 60px)
+      min-width: 250px
+      margin: 30px
+      justify-content: space-between
+      align-items: center
+      padding: 7px
+      border: 1px solid $color
+      border-radius: 20px
+      min-height: 380px
+      &.facilityContainer
+        min-width: 400px
+      .spanContainer
+        width: 100%
+        display: flex
+        justify-content: center
+        align-items: center
+        flex-direction: column
+        .span
+          margin: 5px 10px
+          display: flex
+          flex-direction: column
+          justify-content: center
+          align-items: center
+          text-align: center
+          &::after
+            height: 1px
+            width: 20px
+            background-color: rgb(147, 17, 0)
+            content: ""
+            display: block
+            margin-top: 10px
+          &:first-of-type
+            font-size: 20px
+            font-weight: bold  
+        .openingHours
+          .span
+            &:first-of-type
+              font-size: 16px
+              font-weight: normal
+      .buttonContainer
+        width: 100%
+        display: flex
+        flex-direction: column
+        justify-content: center
+        align-content: center
+        flex-wrap: wrap
+        .fieldContainerButton
+          width: 80%
+          height: 50px
+          color: black
+          background-color: white
+          border: 2px solid rgb(147, 17, 0)
+          margin: 10px
+          border-radius: 20px
+          display: flex
+          justify-content: center
+          align-items: center
+          transition: .3s
+          &:hover
+            cursor: pointer
+            background-color: rgb(147, 17, 0)
+            color: white
+    
+
+@media screen and ( max-width: 1024px )
+  .mainWrapper
+    margin-top: 5vh !important
+  

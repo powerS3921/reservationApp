@@ -1,22 +1,38 @@
 module.exports = (sequelize, DataTypes) => {
   const Field = sequelize.define("Field", {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    location: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    capacity: {
+    sizeId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    SportsFacilityId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "SportsFacilities", // Refer to SportsFacility model
+        key: "id",
+      },
     },
   });
 
   Field.associate = (models) => {
+    Field.belongsTo(models.Sport, {
+      foreignKey: { allowNull: false },
+    });
+    Field.belongsTo(models.FieldSize, {
+      foreignKey: "sizeId",
+      as: "fieldSize",
+    });
+    Field.belongsTo(models.SportsFacility, {
+      foreignKey: "SportsFacilityId",
+      as: "sportsFacility",
+    });
     Field.hasMany(models.Reservation, {
-      onDelete: "cascade",
+      foreignKey: "FieldId",
+      as: "Reservations",
     });
   };
 

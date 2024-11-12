@@ -1,0 +1,72 @@
+.reservationBox
+  .headerh2
+    display: flex
+    flex-direction: column
+    align-items: center
+    font-size: 30px
+    &::after
+      height: 5px
+      width: 25px
+      background-color: rgb(147, 17, 0)
+      content: ""
+      display: block
+      margin-top: 20px
+  .hourWrapper
+    display: flex
+    flex-direction: column
+    width: 50%
+    align-items: center
+    justify-content: center
+    border-radius: 20px
+    border: 1px solid rgb(147, 17, 0)
+    margin-bottom: 50px
+    .hour
+      list-style-type: none
+      min-height: 50px
+      display: flex
+      justify-content: center
+      align-items: center
+      padding: 20px 20px
+      min-width: 300px
+      width: 100%
+      border-bottom: 1px solid rgb(147, 17, 0)
+      &:last-child
+        border: none
+      button
+        margin-left: 50px
+        width: 30%
+        min-width: 150px
+        height: 50px
+        color: black
+        background-color: white
+        border: 2px solid rgb(147, 17, 0)
+        border-radius: 20px
+        display: flex
+        justify-content: center
+        align-items: center
+        transition: .3s
+        &:hover
+          cursor: pointer
+          background-color: rgb(147, 17, 0)
+          color: white
+        &.active
+          background-color: rgb(147, 17, 0)
+          color: white
+  .fieldContainerButton
+    width: 20%
+    min-width: 200px
+    height: 50px
+    color: black
+    background-color: white
+    border: 2px solid rgb(147, 17, 0)
+    margin: 10px
+    border-radius: 20px
+    display: flex
+    justify-content: center
+    align-items: center
+    transition: .3s
+    &:hover
+      cursor: pointer
+      background-color: rgb(147, 17, 0)
+      color: white
+    

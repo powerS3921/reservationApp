@@ -1,0 +1,136 @@
+.footerWrapper
+  padding: 40px
+  min-height: 40vh
+  width: 100%
+  display: flex
+  background-color: #222
+  justify-content: center
+  flex-wrap: wrap
+  position: relative
+  .mainFooter
+    display: flex
+    flex-direction: row
+    color: #ddd
+    width: 80%
+    .leftFooter
+      width: 40%
+      margin-right: 50px
+      .logoInFooter
+        text-decoration: none
+        color: #ddd
+        margin-bottom: 30px
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+        font-size: 30px
+        font-weight: normal
+      p
+      .icons
+        list-style: none
+        display: flex
+        margin: 10px
+        justify-content: center
+        align-items: center
+        li
+          margin: 10px
+          a
+            text-decoration: none
+            color: #666
+            border-radius: 50%
+            border: 3px solid #666
+            display: flex
+            justify-content: center
+            align-items: center
+            width: 30px
+            height: 30px
+            transition: .3s
+            &:hover
+              color: red
+              border-color: red
+    .rightFooter
+      width: 60%
+      display: flex
+      flex-direction: column
+      h1
+        font-size: 22px
+        margin-bottom: 20px
+        margin-left: 27px
+      h2
+        font-size: 17px
+        color: #666
+        margin-bottom: 2px
+        margin-left: 27px
+      .email
+        display: flex
+        align-items: center
+        margin-bottom: 30px
+        .icon
+          font-size: 22px
+          color: red
+          margin-right: 5px
+        a
+          font-size: 15px
+          text-decoration: none
+          color: #ddd
+          display: inline-block
+          transition: .3s
+          &::after
+            height: 1px
+            width: 100%
+            display: block
+            content: ""
+            margin-top: 3px
+            background-color: #ddd
+            transition: .3s
+          &:hover
+            color: #666
+          &:hover::after
+            background-color: #666
+      h2
+      .writeToUs
+        display: flex
+        flex-wrap: wrap
+        .location
+          display: flex
+          flex-wrap: nowrap
+          margin: 10px 15px 20px 0
+          flex-basis: 47%
+          .icon
+            font-size: 22px
+            color: red
+            margin-right: 5px
+          .address
+            display: flex
+            flex-direction: column
+            span
+  .copyright
+    font-size: 10px
+    color: #ddd
+    position: absolute
+    bottom: 10px
+
+@media screen and (max-width: 1200px) 
+  .footerWrapper
+    .mainFooter
+      width: 100%
+
+@media screen and (max-width: 1000px) 
+  .footerWrapper
+    .mainFooter
+      width: 80%
+      flex-direction: column
+      align-items: center
+      .leftFooter
+        width: 100%
+        margin-right: 0
+      .rightFooter
+        width: 100%
+
+@media screen and (max-width: 725px)
+  .footerWrapper
+    .mainFooter
+      width: 100%
+      .leftFooter
+        margin-bottom: 50px
+      .rightFooter
+        .writeToUs
+          .location
+            flex-basis: 100%

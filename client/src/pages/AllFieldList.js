@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "../style/FieldList.sass";
 
-const FieldList = ({ showNav }) => {
+const AllFieldList = ({ showNav }) => {
   const [fields, setFields] = useState([]);
   const [cities, setCities] = useState([]);
   const [sports, setSports] = useState([]);
@@ -11,18 +11,16 @@ const FieldList = ({ showNav }) => {
   const [selectedSport, setSelectedSport] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { id: sportsFieldId } = useParams();
 
   useEffect(() => {
     fetchCities();
     fetchSports();
     fetchFields(); // Fetch all fields initially
-  }, [sportsFieldId]);
+  }, []);
 
   // Fetch fields based on optional filters
   const fetchFields = () => {
     const params = {};
-    if (sportsFieldId) params.sportsFacilityId = sportsFieldId;
     if (selectedCity) params.city = selectedCity;
     if (selectedSport) params.sport = selectedSport;
 
@@ -32,6 +30,7 @@ const FieldList = ({ showNav }) => {
       .then((response) => {
         setFields(response.data);
         setLoading(false); // Reset loading state
+        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching fields:", error);
@@ -75,7 +74,7 @@ const FieldList = ({ showNav }) => {
       <h1 className="h1Header">Boiska</h1>
 
       <div className="filters">
-        {/* <label className="filterLabel">
+        <label className="filterLabel">
           <p className="filterCaption">Miasto</p>
           <select value={selectedCity} className="filterSelect" onChange={(e) => setSelectedCity(e.target.value)}>
             <option value="" className="filterOption">
@@ -87,7 +86,7 @@ const FieldList = ({ showNav }) => {
               </option>
             ))}
           </select>
-        </label> */}
+        </label>
 
         <label className="filterLabel">
           <p className="filterCaption">Sport</p>
@@ -119,6 +118,9 @@ const FieldList = ({ showNav }) => {
             <li key={field.id} className="fieldContainer">
               <div className="spanContainer">
                 <span className="span">{field.Sport.name}</span>
+                <span className="span">{field.sportsFacility.name}</span>
+                <span className="span">{field.sportsFacility.City.name}</span>
+                <span className="span">{field.sportsFacility.address}</span>
                 <span className="span">{field.fieldSize.size}</span>
                 <span className="span">{field.price} PLN/h</span>
               </div>
@@ -138,4 +140,4 @@ const FieldList = ({ showNav }) => {
   );
 };
 
-export default FieldList;
+export default AllFieldList;

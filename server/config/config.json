@@ -1,22 +1,22 @@
 {
   "development": {
     "username": "root",
-    "password": "admin",
-    "database": "reservations",
+    "password": "zaq1@WSX",
+    "database": "reservation",
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": "admin",
-    "database": "reservations",
+    "password": "zaq1@WSX",
+    "database": "reservation",
     "host": "localhost",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": "admin",
-    "database": "reservations",
+    "password": "zaq1@WSX",
+    "database": "reservation",
     "host": "localhost",
     "dialect": "mysql"
   }

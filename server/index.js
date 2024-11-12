@@ -20,6 +20,21 @@ app.use("/fields", fieldRoutes);
 const reservationRoutes = require("./routes/Reservation");
 app.use("/reservations", reservationRoutes);
 
+const citiesRouter = require("./routes/City");
+app.use("/api", citiesRouter);
+
+const sportsRouter = require("./routes/Sport");
+app.use("/api/sports", sportsRouter);
+
+const fieldSizeRoutes = require("./routes/FieldSize.js");
+app.use("/api/fieldSizes", fieldSizeRoutes);
+
+const sportFacility = require("./routes/SportFacility.js");
+app.use("/api/sportfacility", sportFacility);
+
+const payment = require("./routes/Payment.js");
+app.use("/", sportFacility);
+
 db.sequelize.sync().then(() => {
   app.listen(3001, () => {
     console.log("Server runnig on port 3001");

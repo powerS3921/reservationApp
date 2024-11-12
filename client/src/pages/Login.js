@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
+import "../style/Login.sass";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -18,12 +19,12 @@ const Login = () => {
       } else {
         localStorage.setItem("accessToken", response.data.token);
         setAuthState({ username: response.data.username, id: response.data.id, status: true });
-        navigateTo(`/${response.data.id}`);
+        navigateTo("/");
       }
     });
   };
   return (
-    <div className="mainWrapper mainWrapperLogin">
+    <div className="mainWrapperLogin">
       <div className="wrapperInput">
         <input
           className="defaultInput"

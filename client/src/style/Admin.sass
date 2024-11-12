@@ -1,0 +1,42 @@
+.wrapperAdmin
+  display: flex
+  width: 100%
+  height: 94vh
+  align-items: center
+  flex-direction: column
+  margin: auto
+  transition: .3s
+  .headerText
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 80%
+    font-size: 30px
+    font-family: "Roboto Mono", monospace
+    height: 40vh
+  .adminLinks
+    width: 80%
+    display: flex
+    justify-content: center
+    align-items: center
+    flex-wrap: wrap
+    .adminButton
+      margin: 40px
+      height: 10vh
+      width: 200px
+      background-color: white
+      border: 1px solid black
+      cursor: pointer
+      font-size: 20px
+
+@media screen and ( max-width: 1024px )
+  .wrapperAdmin
+    margin-top: 0 !important
+  
+
+@media screen and ( max-width: 625px )
+  .wrapperAdmin
+    .headerText
+      font-size: 25px
+      height: 30vh
+  

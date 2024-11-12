@@ -12,6 +12,20 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    role: {
+      type: DataTypes.TINYINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
   });
+
+  Users.associate = (models) => {
+    Users.hasMany(models.Reservation, {
+      foreignKey: {
+        allowNull: false,
+      },
+    });
+  };
+
   return Users;
 };

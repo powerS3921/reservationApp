@@ -85,62 +85,23 @@ router.get("/", async (req, res) => {
  */
 
 router.post("/", async (req, res) => {
-  const { fieldId, userId, startTime, endTime } = req.body;
-
-  const now = new Date();
-  if (new Date(startTime) <= now || new Date(endTime) <= now) {
-    return res.status(400).json({ error: "Start and end times must be in the future." });
-  }
+  const { fieldId, userId, reservationDate, startTime, endTime } = req.body;
 
   try {
-    const conflictingReservations = await Reservation.findAll({
-      where: {
-        FieldId: fieldId,
-        [Op.or]: [
-          {
-            startDate: {
-              [Op.between]: [startTime, endTime],
-            },
-          },
-          {
-            endDate: {
-              [Op.between]: [startTime, endTime],
-            },
-          },
-          {
-            [Op.and]: [
-              {
-                startDate: {
-                  [Op.lte]: startTime,
-                },
-              },
-              {
-                endDate: {
-                  [Op.gte]: endTime,
-                },
-              },
-            ],
-          },
-        ],
-      },
-    });
-
-    if (conflictingReservations.length > 0) {
-      return res.status(400).json({ error: "There is already a reservation for this field at the requested time." });
-    }
-
-    // Utwórz rezerwację
+    // Create the reservation
     const reservation = await Reservation.create({
       FieldId: fieldId,
       UserId: userId,
-      startDate: startTime,
-      endDate: endTime,
+      reservationDate: reservationDate,
+      startTime: startTime,
+      endTime: endTime,
+      czyZaplacono: false, // default value
     });
 
     res.status(201).json(reservation);
   } catch (error) {
-    console.error("Error creating reservation:", error);
-    res.status(500).json({ error: "Failed to create reservation." });
+    console.error("Błąd podczas tworzenia rezerwacji:", error);
+    res.status(500).json({ error: "Nie udało się utworzyć rezerwacji." });
   }
 });
 

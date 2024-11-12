@@ -1,0 +1,155 @@
+$color: rgb(147, 17, 0)
+*
+  margin: 0
+  padding: 0
+  box-sizing: border-box
+  font-family: "Roboto Mono", monospace
+.App
+  .navBar
+    position: sticky
+    margin-top: -6vh
+    top: -6vh
+    left: 0
+    display: flex
+    height: 6vh
+    align-items: center
+    justify-content: space-between
+    padding: 0 50px
+    transition: .3s
+    background-color: white
+    z-index: 999
+    &.active
+      margin-top: 0
+      top: 0
+      left: 0
+      box-shadow: 0 0 20px 3px #ccc
+    .logo
+      text-decoration: none
+      color: black
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+      font-size: 20px
+      line-height: 6vh
+    .linkAndLogin
+      display: flex
+      flex-grow: 1
+      justify-content: space-between
+      &.active
+      .rightNavBarLinks
+        margin: 0 auto
+        .link
+          text-decoration: none
+          color: black
+          padding: 10px 20px
+          margin-left: 50px
+          display: inline-block
+          position: relative
+          overflow: hidden
+          &::after
+            content: ""
+            position: absolute
+            bottom: 0
+            left: -101%
+            width: 100%
+            height: 2px
+            background-color: #990f02
+            transition: left 0.3s
+          &:hover::after
+            left: 0
+      .leftNavBarLinks
+        .link
+          text-decoration: none
+          color: black
+          padding: 10px 20px
+          margin-left: 30px
+          display: inline-block
+          position: relative
+          overflow: hidden
+          &::after
+            content: ""
+            position: absolute
+            bottom: 0
+            left: -101%
+            width: 100%
+            height: 2px
+            background-color: #990f02
+            transition: left 0.3s
+          &:hover::after
+            left: 0
+    .iconNavBar
+      display: none
+
+@media screen and (max-width: 1300px)
+  .rightNavBarLinks, .leftNavBarLinks
+    .link
+      margin-left: 20px
+
+@media screen and (max-width: 1024px)
+  .App
+    position: relative
+    overflow-x: hidden
+    .navBar
+      position: absolute
+      margin-top: 0
+      top: 0
+      left: 0
+      right: 0
+      background-color: transparent
+      box-shadow: 0 0
+      width: 100%
+      max-width: 100vh
+      &.active
+        box-shadow: 0 0 0 0 transparent
+      .linkAndLogin
+        flex-direction: column
+        width: 50%
+        position: absolute
+        top: 6vh
+        background-color: #fff
+        text-align: center
+        left: 100%
+        transition: .3s
+        &.active
+          left: 50%
+        .rightNavBarLinks
+          display: flex
+          flex-direction: column
+          width: 100%
+          margin-bottom: 20px
+          .link
+            margin-left: 0
+        .leftNavBarLinks
+          display: flex
+          flex-direction: column
+          width: 100%
+          .link
+            margin-left: 0
+      .iconNavBar
+        display: block
+        cursor: pointer
+
+@media screen and ( max-width:  1500px)
+  .App
+    .navBar
+      .linkAndLogin
+        .rightNavBarLinks
+          .link
+            margin-left: 15px
+
+@media screen and ( max-width:  1200px)
+  .App
+    .navBar
+      .linkAndLogin
+        .rightNavBarLinks
+          .link
+            margin-left: 10px
+            padding: 10px 15px
+  
+
+@media screen and (max-width: 624px)
+  .App
+    .navBar
+      &.active
+      .linkAndLogin
+        width: 100%
+        &.active
+          left: 0

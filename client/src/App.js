@@ -1,7 +1,7 @@
-import "./style/App.css";
+import "./style/App.sass";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { AuthContext } from "./helpers/AuthContext";
@@ -11,21 +11,33 @@ import Gallery from "./pages/Gallery";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Offert from "./pages/Offert";
+import Admin from "./pages/Admin";
 import ResetPassword from "./pages/ResetPassword";
 import FieldList from "./pages/FieldList";
 import FieldReservationList from "./pages/FieldReservationList";
 import AddField from "./pages/AddField";
+import AllFieldList from "./pages/AllFieldList";
 import AddFieldReservation from "./pages/AddFieldReservation";
 import HomeLogged from "./pages/HomeLogged";
 import EditField from "./pages/EditField";
 import EditFieldReservation from "./pages/EditFieldReservation";
-import "./style/FieldList.css";
-import "./style/Home.css";
-import "./style/AddField.css";
+import Reservation from "./pages/Reservation";
+import Facilities from "./pages/Facilities";
+import AddSportFacility from "./pages/AddSportFacility";
+import EditFacilities from "./pages/EditFacilities";
+import SubmitReservation from "./pages/SubmitReservation";
+import ConfirmReservation from "./pages/ConfirmReservation";
 
 function App() {
   const [authState, setAuthState] = useState({ username: "", id: "", status: false });
   const [activeClassNav, setActiveClassNav] = useState(false);
+  const [ifAdmin, setIfAdmin] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [username, setUsername] = useState(null);
+  const [usernameId, setUsernameId] = useState(null);
+  const [showNav, setShowNav] = useState(false);
+
+  const scrolling = useRef(false);
 
   useEffect(() => {
     axios
@@ -39,6 +51,17 @@ function App() {
         else setAuthState({ username: response.data.username, id: response.data.id, status: true });
       });
   }, []);
+
+  useEffect(() => {
+    if (authState.id) {
+      axios.get(`http://localhost:3001/auth/basicinfo/${authState.id}`).then((res) => {
+        setIfAdmin(res.data.role);
+        setUsername(res.data.username);
+        setUsernameId(res.data.id);
+        setIsLoading(false);
+      });
+    }
+  }, [authState.id]);
 
   const switchClassActive = () => {
     setActiveClassNav(!activeClassNav);
@@ -54,42 +77,81 @@ function App() {
     setActiveClassNav(false);
   };
 
+  const handleScroll = () => {
+    if (window.scrollY > 50) {
+      setShowNav(true);
+      scrolling.current = true;
+    } else {
+      setShowNav(false);
+      scrolling.current = false;
+    }
+  };
+
+  const handleMouseMove = (event) => {
+    if (!scrolling.current) {
+      if (event.clientY < 50) {
+        setShowNav(true);
+      } else if (event.clientY > 100 && !scrolling.current) {
+        setShowNav(false);
+      }
+    }
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
   return (
     <div className="App">
       <AuthContext.Provider value={{ authState, setAuthState }}>
         <Router>
-          <div className="navBar">
+          <div className={showNav ? "navBar active" : "navBar"}>
             <Link to="/" className="logo">
               GameGalaxy
             </Link>
-            <div className="linkAndLogin">
-              <div className={activeClassNav ? "rightNavBarLinks active" : "rightNavBarLinks"}>
-                <Link to={!authState.status ? "/" : `/${authState.id}`} className="link" onClick={switchClassActiveToFalse}>
-                  Home
+            <div className={activeClassNav ? "linkAndLogin active" : "linkAndLogin"}>
+              <div className="rightNavBarLinks">
+                <Link to="/" className="link" onClick={switchClassActiveToFalse}>
+                  Strona główna
                 </Link>
-                <Link to="/offert" className="link" onClick={switchClassActiveToFalse}>
-                  Offert
-                </Link>
+                {authState.status ? (
+                  <Link to="/reservation" className="link" onClick={switchClassActiveToFalse}>
+                    Rezerwacja
+                  </Link>
+                ) : (
+                  <Link to="/offert" className="link" onClick={switchClassActiveToFalse}>
+                    Oferta
+                  </Link>
+                )}
                 <Link to="/galeria" className="link" onClick={switchClassActiveToFalse}>
-                  Gallery
+                  Galeria
                 </Link>
                 <Link to="/about" className="link" onClick={switchClassActiveToFalse}>
-                  About
+                  O nas
                 </Link>
+                {ifAdmin && authState.status ? (
+                  <Link to="/admin" className="link" onClick={switchClassActiveToFalse}>
+                    Panel admina
+                  </Link>
+                ) : null}
               </div>
               <div className="leftNavBarLinks">
                 {!authState.status ? (
                   <>
                     <Link to="/login" className="link" onClick={switchClassActiveToFalse}>
-                      Login
+                      Logowanie
                     </Link>
                     <Link to="/register" className="link" onClick={switchClassActiveToFalse}>
-                      Register
+                      Rejestracja
                     </Link>
                   </>
                 ) : (
-                  <Link to="/login" className="link" onClick={logout}>
-                    Logout
+                  <Link to="/" className="link" onClick={logout}>
+                    Wyloguj
                   </Link>
                 )}
               </div>
@@ -99,21 +161,29 @@ function App() {
               {!activeClassNav ? <MenuIcon onClick={switchClassActive} style={{ fontSize: "30px" }} /> : <CloseIcon onClick={switchClassActive} style={{ fontSize: "30px" }} />}
             </div>
           </div>
+
           <Routes>
-            <Route path="/" element={<HomeLogged />} />
-            <Route path="/:id" element={<Home />} />
+            <Route path="/" element={authState.status ? <HomeLogged username={username} /> : <Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/galeria" element={<Gallery />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/offert" element={<Offert />} />
+            <Route path="/reservation" element={<Reservation showNav={showNav} />} />
+            <Route path="/Admin" element={<Admin showNav={showNav} />} />
             <Route path="/resetpassword" element={<ResetPassword />} />
-            <Route path="/fields/:userId" element={<FieldList />} />
+            <Route path="/fields" element={<AllFieldList showNav={showNav} />} />
+            <Route path="/fields/:id" element={<FieldList showNav={showNav} />} />
             <Route path="/field-reservations/:id" element={<FieldReservationList />} />
-            <Route path="/add-field/:id" element={<AddField />} />
+            <Route path="/add-field/:id" element={<AddField showNav={showNav} />} />
+            <Route path="/add-facility" element={<AddSportFacility showNav={showNav} />} />
+            <Route path="/edit-facility/:id" element={<EditFacilities showNav={showNav} />} />
+            <Route path="/facility" element={<Facilities showNav={showNav} />} />
             <Route path="/add-field-reservation/:id" element={<AddFieldReservation />} />
-            <Route path="/edit-field/:id/:userId" element={<EditField />} />
+            <Route path="/edit-field/:id" element={<EditField showNav={showNav} />} />
             <Route path="/edit-reservation/:id" element={<EditFieldReservation />} />
+            <Route path="/submit-resservation/:id" element={<SubmitReservation showNav={showNav} />} />
+            <Route path="/confirm-reservation" element={<ConfirmReservation showNav={showNav} userID={usernameId} />} />
           </Routes>
         </Router>
       </AuthContext.Provider>

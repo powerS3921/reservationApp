@@ -1,0 +1,55 @@
+.slimHeaderSliderContainer
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 50vh
+  overflow: hidden
+  display: flex
+  align-items: flex-end
+  justify-content: center
+  .header
+    position: absolute
+    top: 0
+    width: 100%
+    height: 100%
+    background-repeat: no-repeat
+    background-size: cover
+    background-position: center
+  .dots-container
+    display: flex
+    justify-content: center
+    align-items: center
+    margin-bottom: 50px
+    z-index: 555
+    .dot
+      width: 14px
+      height: 14px
+      margin: 0 7px
+      border-radius: 50%
+      background-color: gray
+      cursor: pointer
+      transition: background-color 0.3s ease
+      &.active
+        background-color: white
+        width: 20px
+        height: 20px
+  .headerCapture
+    z-index: 998
+    background-color: #ddd
+    padding: 50px
+    position: absolute
+    top: 20%
+    left: 10%
+    border-radius: 20px
+    h1
+    h2
+.opinion
+  margin-top: 100vh
+  height: 100vh
+
+@media screen and ( max-width:  1024px)
+  .slimHeaderSliderContainer
+    .headerCapture
+      padding: 25px
+      font-size: 11px
