@@ -4,6 +4,8 @@ $color: rgb(147, 17, 0)
   padding: 0
   box-sizing: border-box
   font-family: "Roboto Mono", monospace
+body
+  overflow-x: hidden
 .App
   .navBar
     position: sticky
@@ -56,32 +58,68 @@ $color: rgb(147, 17, 0)
           &:hover::after
             left: 0
       .leftNavBarLinks
+        position: absolute
+        right: -500px
+        top: 6vh
+        width: 20%
+        background-color: white
+        text-align: center
+        padding: 30px 0
+        transition: .3s
+        &.active
+          right: 0
         .link
           text-decoration: none
           color: black
-          padding: 10px 20px
-          margin-left: 30px
+          padding: 20px 20px
           display: inline-block
           position: relative
           overflow: hidden
+          display: flex
+          flex-direction: column
           &::after
             content: ""
             position: absolute
             bottom: 0
             left: -101%
             width: 100%
-            height: 2px
+            height: 3px
             background-color: #990f02
             transition: left 0.3s
           &:hover::after
             left: 0
+    .profileButton
+      display: flex
+      justify-content: center
+      align-items: center
+      cursor: pointer
+      &:hover .linkProfileButtonPeople, &:hover .linkProfileButtonArrow
+        color: rgb(147, 17, 0)    
+      .linkProfileButtonPeople
+        margin-right: 3px
+        transition: .2s
+      .linkProfileButtonArrow
+        transition: .2s
     .iconNavBar
       display: none
 
-@media screen and (max-width: 1300px)
-  .rightNavBarLinks, .leftNavBarLinks
-    .link
-      margin-left: 20px
+@media screen and ( max-width:  1500px)
+  .App
+    .navBar
+      .linkAndLogin
+        .rightNavBarLinks
+          .link
+            margin-left: 15px
+
+
+@media screen and ( max-width:  1200px)
+  .App
+    .navBar
+      .linkAndLogin
+        .rightNavBarLinks
+          .link
+            margin-left: 10px
+            padding: 10px 15px
 
 @media screen and (max-width: 1024px)
   .App
@@ -114,35 +152,26 @@ $color: rgb(147, 17, 0)
           display: flex
           flex-direction: column
           width: 100%
-          margin-bottom: 20px
           .link
             margin-left: 0
         .leftNavBarLinks
           display: flex
           flex-direction: column
           width: 100%
+          position: relative
+          padding: 0
+          padding-bottom: 10px
+          top: 0
           .link
             margin-left: 0
+            padding: 10px 15px
+      .profileButton
+        display: none
       .iconNavBar
         display: block
         cursor: pointer
 
-@media screen and ( max-width:  1500px)
-  .App
-    .navBar
-      .linkAndLogin
-        .rightNavBarLinks
-          .link
-            margin-left: 15px
 
-@media screen and ( max-width:  1200px)
-  .App
-    .navBar
-      .linkAndLogin
-        .rightNavBarLinks
-          .link
-            margin-left: 10px
-            padding: 10px 15px
   
 
 @media screen and (max-width: 624px)

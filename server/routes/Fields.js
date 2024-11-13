@@ -49,7 +49,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/available-fields", async (req, res) => {
-  const { city, sport, date, sportsFacilityId } = req.query;
+  const { city, sport, date, sportsFacilityId, page, limit } = req.query;
 
   const whereClause = {};
   if (sport) whereClause.SportId = sport;
@@ -67,6 +67,7 @@ router.get("/available-fields", async (req, res) => {
   const dayOfWeek = selectedDate.format("dddd").toLowerCase(); // e.g., "monday"
 
   try {
+    // Pobieramy wszystkie pola spełniające kryteria
     const fields = await Field.findAll({
       where: whereClause,
       include: [
@@ -100,12 +101,16 @@ router.get("/available-fields", async (req, res) => {
 
     for (const field of fields) {
       const openingHour = field.sportsFacility[`open_${dayOfWeek}`];
-      const closingHour = field.sportsFacility[`close_${dayOfWeek}`];
+      let closingHour = field.sportsFacility[`close_${dayOfWeek}`];
 
       if (!openingHour || !closingHour) continue;
 
+      if (closingHour === "24:00:00") {
+        closingHour = "23:59:59";
+      }
+
       let openingTime = moment(openingHour, "HH:mm");
-      const closingTime = moment(closingHour, "HH:mm");
+      const closingTime = moment(closingHour, "HH:mm:ss");
 
       if (isToday && currentTime.isAfter(openingTime)) {
         openingTime = moment.max(currentTime.clone(), openingTime);
@@ -117,11 +122,12 @@ router.get("/available-fields", async (req, res) => {
         where: {
           FieldId: field.id,
           reservationDate: date,
+          czyZaplacono: true,
           startTime: {
-            [Op.gte]: openingTime.format("HH:mm"),
+            [Op.gte]: openingTime.format("HH:mm:ss"),
           },
           endTime: {
-            [Op.lte]: closingTime.format("HH:mm"),
+            [Op.lte]: closingTime.format("HH:mm:ss"),
           },
         },
       });
@@ -131,7 +137,16 @@ router.get("/available-fields", async (req, res) => {
       }
     }
 
-    res.json(availableFields);
+    // Implementacja paginacji
+    const totalItems = availableFields.length;
+    const offset = (page - 1) * limit;
+    const paginatedFields = availableFields.slice(offset, offset + limit);
+
+    res.json({
+      fields: paginatedFields,
+      totalPages: Math.ceil(totalItems / limit),
+      currentPage: parseInt(page, 10),
+    });
   } catch (error) {
     console.error("Error fetching fields:", error);
     res.status(500).json({ message: "Error fetching fields." });

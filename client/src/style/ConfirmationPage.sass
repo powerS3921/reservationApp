@@ -1,0 +1,21 @@
+.reservationBox
+  .link
+    text-decoration: none
+    color: black
+    font-size: 25px
+    display: flex
+    flex-direction: column
+    align-items: center
+    overflow: hidden
+    &::after
+      height: 3px
+      width: 100%
+      background-color: rgb(147, 17, 0)
+      content: ""
+      display: block
+      margin-top: 5px
+      margin-left: -200%
+      transition: .3s
+    &:hover::after
+      margin-left: 0
+      

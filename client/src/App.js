@@ -4,6 +4,8 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import { AiOutlineRight, AiOutlineLeft } from "react-icons/ai";
+import { BsPersonCircle } from "react-icons/bs";
 import { AuthContext } from "./helpers/AuthContext";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -28,6 +30,7 @@ import EditFacilities from "./pages/EditFacilities";
 import SubmitReservation from "./pages/SubmitReservation";
 import ConfirmReservation from "./pages/ConfirmReservation";
 import ConfirmationPage from "./pages/ConfirmationPage";
+import Profile from "./pages/Profile";
 
 function App() {
   const [authState, setAuthState] = useState({ username: "", id: "", status: false });
@@ -37,6 +40,7 @@ function App() {
   const [username, setUsername] = useState(null);
   const [usernameId, setUsernameId] = useState(null);
   const [showNav, setShowNav] = useState(false);
+  const [activePeopleIcon, setActivePeopleIcon] = useState(false);
 
   const scrolling = useRef(false);
 
@@ -66,6 +70,7 @@ function App() {
 
   const switchClassActive = () => {
     setActiveClassNav(!activeClassNav);
+    setActivePeopleIcon(true);
   };
 
   const switchClassActiveToFalse = () => {
@@ -76,6 +81,7 @@ function App() {
     localStorage.removeItem("accessToken");
     setAuthState({ username: "", id: 0, status: false });
     setActiveClassNav(false);
+    setActivePeopleIcon(false);
   };
 
   const handleScroll = () => {
@@ -90,7 +96,7 @@ function App() {
 
   const handleMouseMove = (event) => {
     if (!scrolling.current) {
-      if (event.clientY < 50) {
+      if (event.clientY < 300) {
         setShowNav(true);
       } else if (event.clientY > 100 && !scrolling.current) {
         setShowNav(false);
@@ -106,6 +112,16 @@ function App() {
       window.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
+
+  const switchPeopleClassActive = () => {
+    setActivePeopleIcon(!activePeopleIcon);
+    setActiveClassNav(false);
+  };
+
+  const switchPeopleClassActiveToFalse = () => {
+    setActivePeopleIcon(false);
+  };
+
   return (
     <div className="App">
       <AuthContext.Provider value={{ authState, setAuthState }}>
@@ -140,22 +156,35 @@ function App() {
                   </Link>
                 ) : null}
               </div>
-              <div className="leftNavBarLinks">
+              <div className={activePeopleIcon ? "active leftNavBarLinks" : "leftNavBarLinks"}>
                 {!authState.status ? (
                   <>
-                    <Link to="/login" className="link" onClick={switchClassActiveToFalse}>
+                    <Link to="/login" className="link" onClick={switchPeopleClassActiveToFalse}>
                       Logowanie
                     </Link>
-                    <Link to="/register" className="link" onClick={switchClassActiveToFalse}>
+                    <Link to="/register" className="link" onClick={switchPeopleClassActiveToFalse}>
                       Rejestracja
                     </Link>
                   </>
                 ) : (
-                  <Link to="/" className="link" onClick={logout}>
-                    Wyloguj
-                  </Link>
+                  <>
+                    <Link to={`/profile/${authState.id}`} className="link" onClick={switchPeopleClassActiveToFalse}>
+                      Mój profil
+                    </Link>
+                    <Link to="/" className="link" onClick={logout}>
+                      Wyloguj
+                    </Link>
+                  </>
                 )}
               </div>
+            </div>
+            <div className="profileButton">
+              <BsPersonCircle style={{ fontSize: "30px" }} className="linkProfileButtonPeople" onClick={switchPeopleClassActive} />
+              {!activePeopleIcon ? (
+                <AiOutlineLeft onClick={switchPeopleClassActive} style={{ fontSize: "20px" }} className="linkProfileButtonArrow" />
+              ) : (
+                <AiOutlineRight onClick={switchPeopleClassActive} style={{ fontSize: "20px" }} className="linkProfileButtonArrow" />
+              )}
             </div>
 
             <div className="iconNavBar">
@@ -185,7 +214,8 @@ function App() {
             <Route path="/edit-reservation/:id" element={<EditFieldReservation />} />
             <Route path="/submit-resservation/:id" element={<SubmitReservation showNav={showNav} />} />
             <Route path="/confirm-reservation" element={<ConfirmReservation showNav={showNav} userID={usernameId} />} />
-            <Route path="/confirmation-page" element={<ConfirmationPage />} />
+            <Route path="/confirmation-page" element={<ConfirmationPage showNav={showNav} />} />
+            <Route path="/profile/:id" element={<Profile showNav={showNav} username={username} />} />
           </Routes>
         </Router>
       </AuthContext.Provider>

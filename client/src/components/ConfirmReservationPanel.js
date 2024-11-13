@@ -15,9 +15,14 @@ const ConfirmReservationPanel = ({ showNav, userID }) => {
       const { selectedField, selectedDate, selectedHour } = location.state;
       const reservationDate = new Date(selectedDate).toISOString();
       const startTime = `${selectedHour}`;
-      const endTime = `${parseInt(selectedHour) + 1}:00:00`;
+      let endTime = `${parseInt(selectedHour) + 1}:00:00`;
 
-      // Step 1: Create the reservation in the database
+      // Sprawdzenie i zmiana endTime na 23:59:59, jeśli jest ustawione na 24:00:00
+      if (endTime === "24:00:00") {
+        endTime = "23:59:59";
+      }
+
+      // Krok 1: Tworzenie rezerwacji w bazie danych
       const reservationResponse = await axios.post("http://localhost:3001/reservations", {
         fieldId: selectedField.id,
         userId: userID,
@@ -29,7 +34,7 @@ const ConfirmReservationPanel = ({ showNav, userID }) => {
 
       const reservationId = reservationResponse.data.id;
 
-      // Step 2: Create a Stripe session and pass the reservation ID
+      // Krok 2: Tworzenie sesji Stripe i przekazanie ID rezerwacji
       const sessionResponse = await axios.post("http://localhost:3002/create-checkout-session", {
         reservationId,
         price: selectedField.price,
@@ -37,12 +42,12 @@ const ConfirmReservationPanel = ({ showNav, userID }) => {
 
       const { sessionId } = sessionResponse.data;
 
-      // Step 3: Update the reservation with the sessionId
+      // Krok 3: Aktualizacja rezerwacji z sessionId
       await axios.put(`http://localhost:3001/reservations/${reservationId}/update-session`, {
         sessionId,
       });
 
-      // Redirect to Stripe Checkout
+      // Przekierowanie do Stripe Checkout
       const stripe = await stripePromise;
       await stripe.redirectToCheckout({ sessionId });
     } catch (error) {

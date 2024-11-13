@@ -12,7 +12,7 @@ app.post("/create-checkout-session", async (req, res) => {
 
   try {
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
+      payment_method_types: ["card", "blik", "p24"],
       line_items: [
         {
           price_data: {

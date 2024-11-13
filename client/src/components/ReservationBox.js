@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../style/ReservationBox.sass";
 import DatePicker from "react-datepicker";
@@ -16,6 +16,9 @@ const ReservationBox = ({ showNav }) => {
   const [fields, setFields] = useState([]);
   const [visibleH2, setVisibleH2] = useState(0);
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const limit = 5;
 
   const handleCityClick = (city) => {
     setSelectedCity(city);
@@ -50,20 +53,41 @@ const ReservationBox = ({ showNav }) => {
     }
 
     try {
-      const response = await axios.get("http://localhost:3001/fields/available-fields", {
+      const response = await axios.get(`http://localhost:3001/fields/available-fields`, {
         params: {
           city: selectedCity,
           sport: selectedSports,
           date: selectedDate.toISOString(),
+          page: currentPage,
+          limit,
         },
       });
 
-      setFields(response.data);
+      setFields(response.data.fields);
+      setTotalPages(response.data.totalPages);
       setVisibleH2(1);
       console.log(response.data);
     } catch (error) {
       console.error("Błąd podczas pobierania boisk:", error);
     }
+  };
+
+  useEffect(() => {
+    if (selectedCity && selectedSports && selectedDate) {
+      fetchFacilities();
+    }
+  }, [currentPage]);
+
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
   const addReservation = (id) => {
@@ -148,7 +172,6 @@ const ReservationBox = ({ showNav }) => {
               {fields.map((field) => (
                 <li key={field.id} className="fieldContainer">
                   <div className="fieldImage" style={{ backgroundImage: `url(${images[selectedSports - 1]})` }}></div>
-
                   <div className="spanContainer">
                     <span className="span">{field.sportsFacility.name}</span>
                     <span className="span">{field.sportsFacility.City.name}</span>
@@ -164,6 +187,19 @@ const ReservationBox = ({ showNav }) => {
                 </li>
               ))}
             </ul>
+            <div className="paginationControls">
+              <button onClick={goToPreviousPage} className="buttonControls leftRight" disabled={currentPage === 1}>
+                &lt;
+              </button>
+              {[...Array(totalPages)].map((_, index) => (
+                <button key={index + 1} onClick={() => handlePageClick(index + 1)} className={currentPage === index + 1 ? "active number buttonControls" : "number buttonControls"}>
+                  {index + 1}
+                </button>
+              ))}
+              <button onClick={goToNextPage} disabled={currentPage === totalPages} className="buttonControls leftRight">
+                &gt;
+              </button>
+            </div>
           </div>
         )}
         {fields.length === 0 && visibleH2 === 1 && <h2 className="headerh2">Brak dostępnych boisk w wybranych przez ciebie kryteriach</h2>}

@@ -38,7 +38,7 @@
 
 const express = require("express");
 const router = express.Router();
-const { Reservation } = require("../models");
+const { Reservation, Field, SportsFacility } = require("../models");
 const { Op } = require("sequelize");
 
 /**
@@ -58,9 +58,42 @@ const { Op } = require("sequelize");
  *                 $ref: '#/components/schemas/Reservation'
  */
 
-router.get("/", async (req, res) => {
-  const reservations = await Reservation.findAll();
-  res.json(reservations);
+router.get("/active-reservation", async (req, res) => {
+  try {
+    const { id } = req.query;
+    const today = new Date();
+    const reservations = await Reservation.findAll({
+      where: {
+        czyZaplacono: true,
+        UserId: id,
+        [Op.or]: [
+          { reservationDate: { [Op.gt]: today } }, // Rezerwacje w przyszłości
+          {
+            reservationDate: today, // Rezerwacje na dziś
+            startTime: { [Op.gt]: today.toTimeString().slice(0, 5) }, // późniejsze niż obecna godzina
+          },
+        ],
+      },
+      include: [
+        {
+          model: Field,
+          as: "Field",
+          include: [
+            {
+              model: SportsFacility,
+              as: "sportsFacility",
+              attributes: ["name"],
+            },
+          ],
+        },
+      ],
+      // Dodaj informacje o powiązanych tabelach
+    });
+    res.json(reservations);
+  } catch (error) {
+    console.error("Błąd podczas pobierania rezerwacji:", error);
+    res.status(500).json({ message: "Błąd serwera" });
+  }
 });
 
 /**

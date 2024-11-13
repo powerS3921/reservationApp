@@ -132,6 +132,9 @@ $color: rgb(147, 17, 0)
       padding: 10px 0
   .fields
     width: 100%
+    display: flex
+    flex-direction: column
+    align-items: center
     .headerh2
       display: flex
       align-items: center
@@ -149,6 +152,7 @@ $color: rgb(147, 17, 0)
       flex-direction: column
       justify-content: center
       align-items: center
+      width: 100%
       .fieldContainer
         display: flex
         min-width: 600px
@@ -210,6 +214,28 @@ $color: rgb(147, 17, 0)
               cursor: pointer
               background-color: rgb(147, 17, 0)
               color: white
+    .paginationControls
+      display: flex
+      .buttonControls
+        margin: 5px
+        cursor: pointer
+        padding: 5px
+        background-color: white
+        border: 1px solid rgb(147, 17, 0)
+        transition: .3s
+        &:hover
+          background-color: rgb(147, 17, 0)
+          color: white
+      .active
+        background-color: rgb(147, 17, 0)
+        color: white
+        &:hover
+          background-color: white
+          color: black
+      .leftRight
+        margin-left: 20px
+        margin-right: 20px
+
 
 @media screen and ( max-width: 1500px )
   .reservationBox
