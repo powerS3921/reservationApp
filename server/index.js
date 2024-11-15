@@ -3,6 +3,9 @@ const app = express();
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocs = require("./src/swagger.js");
 const cors = require("cors");
+const cron = require("node-cron");
+const { Reservation } = require("./models");
+const { Op } = require("sequelize");
 
 app.use(express.json());
 app.use(cors());
@@ -39,4 +42,24 @@ db.sequelize.sync().then(() => {
   app.listen(3001, () => {
     console.log("Server runnig on port 3001");
   });
+});
+
+cron.schedule("*/5 * * * *", async () => {
+  console.log("Sprawdzanie nieopłaconych rezerwacji starszych niż 30 minut...");
+
+  const now = new Date();
+  const thirtyMinutesAgo = new Date(now.getTime() - 30 * 60 * 1000);
+
+  try {
+    const deletedReservations = await Reservation.destroy({
+      where: {
+        czyZaplacono: false,
+        createdAt: { [Op.lte]: thirtyMinutesAgo },
+      },
+    });
+
+    console.log(`Usunięto ${deletedReservations} nieopłaconych rezerwacji starszych niż 30 minut.`);
+  } catch (error) {
+    console.error("Błąd podczas usuwania nieopłaconych rezerwacji:", error);
+  }
 });

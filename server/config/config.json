@@ -4,20 +4,23 @@
     "password": "zaq1@WSX",
     "database": "reservation",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "+01:00"
   },
   "test": {
     "username": "root",
     "password": "zaq1@WSX",
     "database": "reservation",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "+01:00"
   },
   "production": {
     "username": "root",
     "password": "zaq1@WSX",
     "database": "reservation",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "+01:00"
   }
 }

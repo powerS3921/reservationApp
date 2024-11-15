@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
@@ -9,6 +9,16 @@ const stripePromise = loadStripe("pk_test_51QIdm2B1QJBWRwyCwAlVxf9Pka47EsCpEZOli
 const ConfirmReservationPanel = ({ showNav, userID }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [settedSessionStorage, setSessionStorage] = useState(null);
+  const [actualSessionStorage, setActualSessionStorage] = useState(null);
+  const { selectedDate, selectedHour } = location.state;
+  const { id } = location.state.selectedField;
+  const formattedDate = new Date(selectedDate).toISOString().split("T")[0];
+  const storage = `${id}-${formattedDate}-${selectedHour}`;
+
+  useEffect(() => {
+    setActualSessionStorage(sessionStorage.getItem(storage));
+  }, [storage]);
 
   const handlePayment = async () => {
     try {
@@ -16,7 +26,8 @@ const ConfirmReservationPanel = ({ showNav, userID }) => {
       const reservationDate = new Date(selectedDate).toISOString();
       const startTime = `${selectedHour}`;
       let endTime = `${parseInt(selectedHour) + 1}:00:00`;
-
+      sessionStorage.setItem(storage, storage);
+      setActualSessionStorage(sessionStorage.getItem(storage));
       // Sprawdzenie i zmiana endTime na 23:59:59, jeśli jest ustawione na 24:00:00
       if (endTime === "24:00:00") {
         endTime = "23:59:59";
@@ -71,9 +82,8 @@ const ConfirmReservationPanel = ({ showNav, userID }) => {
       <h2>Adres obiektu: {location.state.selectedField.sportsFacility.address}</h2>
       <h2>Data: {date}</h2>
       <h2>Godzina: {location.state.selectedHour}</h2>
-
-      <button className="fieldContainerButton" onClick={handlePayment}>
-        Akceptuj i zapłać
+      <button className="fieldContainerButton" onClick={handlePayment} disabled={actualSessionStorage !== storage ? false : true}>
+        {actualSessionStorage !== storage ? "Akceptuj i zapłać" : "Przetwarzanie płatności..."}
       </button>
     </div>
   );

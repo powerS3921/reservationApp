@@ -27,11 +27,14 @@
       margin-bottom: 20px
   .reports
     margin-top: 100px
-    .activeReservation
+    width: 60%
+    .activeReservation, .unActiveReservation, .unPaymentReservation
+      margin-bottom: 100px
       .headerh2
         display: flex
         align-items: center
         flex-direction: column
+        text-align: center
         &::after
           height: 5px
           width: 25px
@@ -39,3 +42,37 @@
           content: ""
           display: block
           margin-top: 20px
+      .table
+        width: 100%
+        margin-top: 50px
+        .rdt_TableHeadRow
+          border-bottom: 3px solid rgb(147, 17, 0)
+          .rdt_TableCol
+            .rdt_TableCol_Sortable
+              min-width: 200px
+              div
+                width: 100%
+                text-align: center
+                font-weight: bold
+                font-size: 18px
+        .rdt_TableRow
+          border-bottom: 1px solid rgb(147, 17, 0)
+          .rdt_TableCell
+            display: flex
+            justify-content: center
+            align-items: center
+            .deleteButton
+              width: 50%
+              border: 1px solid rgb(147, 17, 0)
+              border-radius: 20px
+              padding: 5px 10px
+              transition: .3s
+              cursor: pointer
+              background-color: #fff
+              &:hover
+                background-color: rgb(147, 17, 0)
+                color: white
+              &.disabled:hover
+                background-color: white
+                color: #ccc
+                

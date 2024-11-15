@@ -40,6 +40,9 @@ const express = require("express");
 const router = express.Router();
 const { Reservation, Field, SportsFacility } = require("../models");
 const { Op } = require("sequelize");
+const sgMail = require("@sendgrid/mail");
+const db = require("../db");
+require("dotenv").config();
 
 /**
  * @swagger
@@ -57,6 +60,80 @@ const { Op } = require("sequelize");
  *               items:
  *                 $ref: '#/components/schemas/Reservation'
  */
+
+router.get("/get-email-status/:sessionId", async (req, res) => {
+  const { sessionId } = req.params;
+
+  try {
+    const reservation = await Reservation.findOne({
+      where: { sessionId },
+      attributes: ["emailSent"], // Pobierz tylko kolumnę emailSent
+    });
+
+    if (!reservation) {
+      return res.status(404).json({ message: "Rezerwacja nie została znaleziona" });
+    }
+
+    res.status(200).json({ emailSent: reservation.emailSent });
+  } catch (error) {
+    console.error("Błąd podczas pobierania statusu emailSent:", error);
+    res.status(500).json({ message: "Wystąpił błąd serwera" });
+  }
+});
+
+router.post("/send-confirmation-email", async (req, res) => {
+  console.log("POST /send-confirmation-email wywołany");
+  const { sessionId } = req.body;
+  console.log("Session ID:", sessionId);
+
+  try {
+    // Pobranie informacji o rezerwacji i użytkowniku na podstawie sessionId
+    const reservation = await db.query(
+      `SELECT u.email, r.emailSent
+       FROM reservations r
+       JOIN users u ON r.userId = u.id
+       WHERE r.sessionId = ? LIMIT 1`, // Use placeholder for sessionId
+      {
+        replacements: [sessionId], // Provide sessionId as parameter
+        type: db.QueryTypes.SELECT, // Specify query type to return the result as a select
+      }
+    );
+
+    if (!reservation.length || reservation[0].emailSent) {
+      return res.status(404).json({ message: "Rezerwacja nie została znaleziona" });
+    }
+
+    const { email } = reservation[0];
+
+    const apiKey = process.env.SENDGRID_API_KEY;
+    // Używanie klucza z .env
+
+    if (!apiKey) {
+      return res.status(500).json({ message: "Brak klucza API SendGrid" });
+    }
+
+    sgMail.setApiKey(apiKey);
+
+    const msg = {
+      to: email, // Adres odbiorcy
+      from: "opielowski.maciek0309@outlook.com", // Adres nadawcy
+      subject: "Potwierdzenie rezerwacji",
+      text: "Twoja rezerwacja została potwierdzona i opłacona. Dziękujemy!",
+      html: "<strong>Twoja rezerwacja została potwierdzona i opłacona. Dziękujemy!</strong>",
+    };
+
+    await sgMail.send(msg);
+    console.log("Email sent");
+    await db.query(`UPDATE reservations SET emailSent = true WHERE sessionId = ?`, {
+      replacements: [sessionId],
+      type: db.QueryTypes.UPDATE,
+    });
+    res.status(200).json({ message: "E-mail został wysłany" });
+  } catch (error) {
+    console.error("Błąd przy wysyłaniu e-maila:", error);
+    res.status(500).json({ message: "Błąd przy wysyłaniu e-maila" });
+  }
+});
 
 router.get("/active-reservation", async (req, res) => {
   try {
@@ -89,6 +166,85 @@ router.get("/active-reservation", async (req, res) => {
       ],
       // Dodaj informacje o powiązanych tabelach
     });
+    res.json(reservations);
+  } catch (error) {
+    console.error("Błąd podczas pobierania rezerwacji:", error);
+    res.status(500).json({ message: "Błąd serwera" });
+  }
+});
+
+router.get("/unpayment-reservation", async (req, res) => {
+  try {
+    const { id } = req.query;
+    const reservations = await Reservation.findAll({
+      where: {
+        czyZaplacono: false,
+        UserId: id,
+      },
+      include: [
+        {
+          model: Field,
+          as: "Field",
+          include: [
+            {
+              model: SportsFacility,
+              as: "sportsFacility",
+              attributes: ["name"],
+            },
+          ],
+        },
+      ],
+      // Dodaj informacje o powiązanych tabelach
+    });
+    res.json(reservations);
+  } catch (error) {
+    console.error("Błąd podczas pobierania rezerwacji:", error);
+    res.status(500).json({ message: "Błąd serwera" });
+  }
+});
+
+router.get("/unactive-reservation", async (req, res) => {
+  try {
+    const { id } = req.query;
+    const today = new Date();
+
+    // Zmieniamy zapytanie, aby uwzględniało rezerwacje dzisiejsze i przeszłe
+    const reservations = await Reservation.findAll({
+      where: {
+        czyZaplacono: true,
+        UserId: id,
+        [Op.and]: [
+          {
+            reservationDate: { [Op.lte]: today }, // Rezerwacje dzisiejsze lub wcześniejsze
+          },
+          {
+            [Op.or]: [
+              {
+                reservationDate: { [Op.lt]: today }, // Rezerwacje przeszłe (data)
+              },
+              {
+                reservationDate: today, // Dzisiaj
+                startTime: { [Op.lt]: today.toTimeString().slice(0, 5) }, // Rezerwacje dzisiejsze, które miały miejsce przed obecną godziną
+              },
+            ],
+          },
+        ],
+      },
+      include: [
+        {
+          model: Field,
+          as: "Field",
+          include: [
+            {
+              model: SportsFacility,
+              as: "sportsFacility",
+              attributes: ["name"],
+            },
+          ],
+        },
+      ],
+    });
+
     res.json(reservations);
   } catch (error) {
     console.error("Błąd podczas pobierania rezerwacji:", error);

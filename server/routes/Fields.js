@@ -122,7 +122,6 @@ router.get("/available-fields", async (req, res) => {
         where: {
           FieldId: field.id,
           reservationDate: date,
-          czyZaplacono: true,
           startTime: {
             [Op.gte]: openingTime.format("HH:mm:ss"),
           },

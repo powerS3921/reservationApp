@@ -4,10 +4,15 @@ import axios from "axios";
 import Footer from "../components/Footer";
 import "../style/Profile.sass";
 import { BsPersonCircle } from "react-icons/bs";
+import ActiveReservationTable from "../components/ActiveReservationTable";
+import UnActiveReservationTable from "../components/UnActiveReservationTable";
+import UnPaymentReservationTable from "../components/UnPaymentReservationTable";
 
 const Profile = ({ showNav, username }) => {
   const { id } = useParams();
-  const [reservations, setReservations] = useState([]);
+  const [activeReservations, setActiveReservations] = useState([]);
+  const [unActiveReservations, setUnActiveReservations] = useState([]);
+  const [unPaymentReservation, setUnPaymentReservation] = useState([]);
 
   useEffect(() => {
     const fetchActiveReservations = async () => {
@@ -15,14 +20,45 @@ const Profile = ({ showNav, username }) => {
         const response = await axios.get("http://localhost:3001/reservations/active-reservation", {
           params: { id },
         });
-        setReservations(response.data);
-        console.log(response.data);
+        setActiveReservations(response.data);
       } catch (error) {
         console.error("Błąd podczas pobierania aktywnych rezerwacji:", error);
       }
     };
 
     fetchActiveReservations();
+  }, []);
+
+  useEffect(() => {
+    const fetchUnActiveReservations = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/reservations/unactive-reservation", {
+          params: { id },
+        });
+        setUnActiveReservations(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Błąd podczas pobierania aktywnych rezerwacji:", error);
+      }
+    };
+
+    fetchUnActiveReservations();
+  }, []);
+
+  useEffect(() => {
+    const fetchUnPaymentReservations = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/reservations/unpayment-reservation", {
+          params: { id },
+        });
+        setUnPaymentReservation(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Błąd podczas pobierania aktywnych rezerwacji:", error);
+      }
+    };
+
+    fetchUnPaymentReservations();
   }, []);
 
   return (
@@ -34,19 +70,31 @@ const Profile = ({ showNav, username }) => {
         </div>
         <div className="reports">
           <div className="activeReservation">
-            <h1 className="headerh2">Aktywne rezerwacje</h1>
-            {reservations.length > 0 ? (
-              <ul>
-                {reservations.map((reservation) => (
-                  <li key={reservation.id}>
-                    Data: {reservation.reservationDate}, Godzina: {reservation.startTime} - {reservation.endTime}, Obiekt: {reservation.Field.sportsFacility.name} Cena:{" "}
-                    {reservation.Field.price} PLN
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>Brak aktywnych rezerwacji.</p>
-            )}
+            {activeReservations.length > 0 ? (
+              <>
+                <h1 className="headerh2">Aktywne rezerwacje</h1>
+
+                <ActiveReservationTable activeReservations={activeReservations} setActiveReservations={setActiveReservations} />
+              </>
+            ) : null}
+          </div>
+          <div className="unActiveReservation">
+            {unActiveReservations.length > 0 ? (
+              <>
+                <h1 className="headerh2">Historyczne rezerwacje</h1>
+
+                <UnActiveReservationTable unActiveReservations={unActiveReservations} setUnActiveReservations={setUnActiveReservations} />
+              </>
+            ) : null}
+          </div>
+          <div className="unPaymentReservation">
+            {unPaymentReservation.length > 0 ? (
+              <>
+                <h1 className="headerh2">Nieopłacone rezerwacje</h1>
+
+                <UnPaymentReservationTable unPaymentReservation={unPaymentReservation} setUnPaymentReservation={setUnPaymentReservation} />
+              </>
+            ) : null}
           </div>
         </div>
       </div>
