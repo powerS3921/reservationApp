@@ -1,58 +1,63 @@
-.mainWrapperLogin
+.mainWrapperRegister
   display: flex
   justify-content: center
   align-items: center
   height: 100vh
-  transition: .3s
   background: radial-gradient(circle, rgba(147, 17, 0, 0.8), rgba(0, 0, 0, 0.9))
   color: white
+  transition: .3s
 
-.loginContainer
-  text-align: center
+.registerContainer
+  background: rgba(0, 0, 0, 0.7)
   padding: 30px
   border-radius: 10px
-  background: rgba(0, 0, 0, 0.7)
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3)
   width: 90%
   max-width: 400px
+  text-align: center
 
-.loginTitle
+.registerTitle
   font-size: 2rem
   font-weight: bold
   margin-bottom: 10px
   color: rgb(147, 17, 0)
   text-shadow: 2px 2px 10px rgba(147, 17, 0, 0.5)
 
-.loginSubtitle
+.registerSubtitle
   margin-bottom: 20px
   font-size: 1rem
   color: #ccc
 
-.wrapperInput
+.registerForm
   display: flex
   flex-direction: column
   align-items: center
 
+.formGroup
+  margin-bottom: 15px
+  width: 100%
+  text-align: left
+
+label
+  font-size: 1rem
+  color: #ddd
+
 .defaultInput
   width: 100%
-  max-width: 350px
   padding: 12px 15px
-  margin: 10px 0
   border: none
   border-radius: 5px
   font-size: 1rem
   background: rgba(255, 255, 255, 0.1)
   color: white
+  margin-top: 5px
   &::placeholder
     color: #aaa
 
-.forgotPassword
+.error
+  color: #ff4d4d
+  font-size: 0.8rem
   margin-top: 5px
-  font-size: 0.9rem
-  color: #aaa
-  text-decoration: none
-  &:hover
-    color: rgb(147, 17, 0)
 
 .button
   padding: 12px 20px
@@ -66,14 +71,3 @@
   transition: background-color 0.3s ease
   &:hover
     background-color: rgba(147, 17, 0, 0.8)
-
-.registerPrompt
-  margin-top: 20px
-  font-size: 0.9rem
-  color: #ccc
-
-.registerLink
-  color: rgb(147, 17, 0)
-  text-decoration: none
-  &:hover
-    text-decoration: underline

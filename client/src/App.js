@@ -193,18 +193,18 @@ function App() {
           </div>
 
           <Routes>
-            <Route path="/" element={authState.status ? <HomeLogged username={username} /> : <Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/galeria" element={<Gallery />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/offert" element={<Offert />} />
+            <Route path="/" element={authState.status ? <HomeLogged username={username} showNav={showNav} /> : <Home showNav={showNav} />} />
+            <Route path="/about" element={<About showNav={showNav} />} />
+            <Route path="/galeria" element={<Gallery showNav={showNav} />} />
+            <Route path="/login" element={<Login showNav={showNav} />} />
+            <Route path="/register" element={<Register showNav={showNav} />} />
+            <Route path="/offert" element={<Offert showNav={showNav} />} />
             <Route path="/reservation" element={<Reservation showNav={showNav} />} />
             <Route path="/Admin" element={<Admin showNav={showNav} />} />
-            <Route path="/resetpassword" element={<ResetPassword />} />
+            <Route path="/resetpassword" element={<ResetPassword showNav={showNav} />} />
             <Route path="/fields" element={<AllFieldList showNav={showNav} />} />
             <Route path="/fields/:id" element={<FieldList showNav={showNav} />} />
-            <Route path="/field-reservations/:id" element={<FieldReservationList />} />
+            <Route path="/field-reservations/:id" element={<FieldReservationList showNav={showNav} />} />
             <Route path="/add-field/:id" element={<AddField showNav={showNav} />} />
             <Route path="/add-facility" element={<AddSportFacility showNav={showNav} />} />
             <Route path="/edit-facility/:id" element={<EditFacilities showNav={showNav} />} />

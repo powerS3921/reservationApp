@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import "../style/Login.sass";
 
-const Login = () => {
+const Login = ({ showNav }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { setAuthState } = useContext(AuthContext);
@@ -12,7 +12,7 @@ const Login = () => {
   const navigateTo = useNavigate();
 
   const login = () => {
-    const data = { username: username, password: password };
+    const data = { username, password };
     axios.post("http://localhost:3001/auth/login", data).then((response) => {
       if (response.data.error) {
         alert(response.data.error);
@@ -23,34 +23,28 @@ const Login = () => {
       }
     });
   };
+
   return (
-    <div className="mainWrapperLogin">
-      <div className="wrapperInput">
-        <input
-          className="defaultInput"
-          onChange={(e) => {
-            setUsername(e.target.value);
-          }}
-          id="inputLogin"
-          name="login"
-          placeholder="Login..."
-        />
-        <input
-          className="defaultInput"
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-          type="password"
-          id="inputPassword"
-          name="password"
-          placeholder="Password..."
-        />
-        <Link to="/resetpassword" className="link">
-          Forgot password?
-        </Link>
-        <button onClick={login} className="button">
-          Login
-        </button>
+    <div className="mainWrapperLogin" style={showNav ? { marginTop: "-6vh" } : { marginTop: "0vh" }}>
+      <div className="loginContainer">
+        <h1 className="loginTitle">GameGalaxy</h1>
+        <p className="loginSubtitle">Welcome back! Please log in to continue.</p>
+        <div className="wrapperInput">
+          <input className="defaultInput" onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+          <input className="defaultInput" onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password" />
+          <Link to="/resetpassword" className="forgotPassword">
+            Forgot password?
+          </Link>
+          <button onClick={login} className="button">
+            Login
+          </button>
+        </div>
+        <p className="registerPrompt">
+          Don't have an account?{" "}
+          <Link to="/register" className="registerLink">
+            Register here
+          </Link>
+        </p>
       </div>
     </div>
   );
