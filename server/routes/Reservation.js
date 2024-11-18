@@ -61,52 +61,31 @@ require("dotenv").config();
  *                 $ref: '#/components/schemas/Reservation'
  */
 
-router.get("/get-email-status/:sessionId", async (req, res) => {
-  const { sessionId } = req.params;
-
-  try {
-    const reservation = await Reservation.findOne({
-      where: { sessionId },
-      attributes: ["emailSent"], // Pobierz tylko kolumnę emailSent
-    });
-
-    if (!reservation) {
-      return res.status(404).json({ message: "Rezerwacja nie została znaleziona" });
-    }
-
-    res.status(200).json({ emailSent: reservation.emailSent });
-  } catch (error) {
-    console.error("Błąd podczas pobierania statusu emailSent:", error);
-    res.status(500).json({ message: "Wystąpił błąd serwera" });
-  }
-});
-
 router.post("/send-confirmation-email", async (req, res) => {
-  console.log("POST /send-confirmation-email wywołany");
   const { sessionId } = req.body;
-  console.log("Session ID:", sessionId);
 
   try {
-    // Pobranie informacji o rezerwacji i użytkowniku na podstawie sessionId
     const reservation = await db.query(
-      `SELECT u.email, r.emailSent
+      `SELECT u.email, u.username, r.*, f.price, sf.name as NazwaObiektu, sf.address, s.name
        FROM reservations r
        JOIN users u ON r.userId = u.id
-       WHERE r.sessionId = ? LIMIT 1`, // Use placeholder for sessionId
+       JOIN fields f on r.FieldId = f.id
+       JOIN sportsfacilities sf ON f.SportsFacilityId = sf.id
+       JOIN sports s ON f.SportId = s.id
+       WHERE r.sessionId = ? LIMIT 1`,
       {
-        replacements: [sessionId], // Provide sessionId as parameter
-        type: db.QueryTypes.SELECT, // Specify query type to return the result as a select
+        replacements: [sessionId],
+        type: db.QueryTypes.SELECT,
       }
     );
 
-    if (!reservation.length || reservation[0].emailSent) {
+    if (!reservation.length) {
       return res.status(404).json({ message: "Rezerwacja nie została znaleziona" });
     }
-
-    const { email } = reservation[0];
+    console.log(reservation);
+    const { email, username, reservationDate, startTime, endTime, price, name, address, NazwaObiektu } = reservation[0];
 
     const apiKey = process.env.SENDGRID_API_KEY;
-    // Używanie klucza z .env
 
     if (!apiKey) {
       return res.status(500).json({ message: "Brak klucza API SendGrid" });
@@ -114,12 +93,67 @@ router.post("/send-confirmation-email", async (req, res) => {
 
     sgMail.setApiKey(apiKey);
 
+    let sportName = null;
+
+    if (name === "Tennis") {
+      sportName = "tenisa";
+    } else if (name === "Koszykówka") {
+      sportName = "koszykówki";
+    } else {
+      sportName = "squasha";
+    }
+
     const msg = {
       to: email, // Adres odbiorcy
-      from: "opielowski.maciek0309@outlook.com", // Adres nadawcy
+      from: "opielowski.maciek0309@outlook.com",
       subject: "Potwierdzenie rezerwacji",
-      text: "Twoja rezerwacja została potwierdzona i opłacona. Dziękujemy!",
-      html: "<strong>Twoja rezerwacja została potwierdzona i opłacona. Dziękujemy!</strong>",
+      html: `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Potwierdzenie Rezerwacji</title>
+            </head>
+            <body style="margin: 0; padding: 0; font-family: 'Roboto Mono', monospace; background-color: #f4f4f4;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f4f4f4; padding: 20px 0;">
+                <tr>
+                  <td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+                      <!-- Header -->
+                      <tr>
+                        <td align="center" style="padding: 20px; background-color: #931100; color: #ffffff; font-size: 24px; font-weight: bold; letter-spacing: 2px;">
+                          GameGalaxy
+                        </td>
+                      </tr>
+                      <!-- Spacer -->
+                      <tr>
+                        <td style="height: 20px;">&nbsp;</td>
+                      </tr>
+                      <!-- Content -->
+                      <tr>
+                        <td align="center" style="padding: 20px 30px; font-size: 16px; line-height: 1.5; color: #333333;">
+                          <h2 style="margin: 0; font-size: 22px; color: #931100;">Cześć ${username}!</h2>
+                          <p>Obiekt <strong>${NazwaObiektu}</strong> potwierdza rezerwację boiska do <strong>${sportName}</strong> w dniu <strong>${reservationDate}</strong> o godzinie <strong>${startTime}</strong>.</p>
+                          <p>Całkowita cena wynosi <strong>${price} zł</strong>.</p>
+                          <p>Widzimy się pod adresem: <strong>${address}</strong>.</p>
+                        </td>
+                      </tr>
+                      <!-- Spacer -->
+                      <tr>
+                        <td style="height: 20px;">&nbsp;</td>
+                      </tr>
+                      <!-- Footer -->
+                      <tr>
+                        <td align="center" style="padding: 10px; background-color: #931100; color: #ffffff; font-size: 14px;">
+                          Pozdrawiamy, Zespół GameGalaxy
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </body>
+            </html>`,
     };
 
     await sgMail.send(msg);

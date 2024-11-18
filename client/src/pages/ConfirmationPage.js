@@ -7,29 +7,21 @@ import "../style/ConfirmationPage.sass";
 const ConfirmationPage = ({ showNav }) => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
-  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     const confirmPayment = async () => {
       try {
-        if (sessionId && !isProcessing) {
-          setIsProcessing(true); // Oznacz rozpoczęcie przetwarzania
-          const { data } = await axios.get(`http://localhost:3001/reservations/get-email-status/${sessionId}`);
-
-          if (!data.emailSent) {
-            await axios.post("http://localhost:3001/reservations/send-confirmation-email", { sessionId });
-            await axios.put("http://localhost:3001/reservations/update-payment", { sessionId });
-          }
+        if (sessionId) {
+          await axios.post("http://localhost:3001/reservations/send-confirmation-email", { sessionId });
+          await axios.put("http://localhost:3001/reservations/update-payment", { sessionId });
         }
       } catch (error) {
         console.error("Błąd przy aktualizacji statusu płatności lub wysyłaniu e-maila:", error);
-      } finally {
-        setIsProcessing(false); // Resetuj stan po zakończeniu
       }
     };
 
     confirmPayment();
-  }, [sessionId, isProcessing]);
+  }, [sessionId]);
 
   return (
     <>
