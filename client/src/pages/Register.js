@@ -10,6 +10,7 @@ const Register = ({ showNav }) => {
     username: "",
     password: "",
     email: "",
+    privacyPolicy: false, // New field for the checkbox
   };
 
   const navigateTo = useNavigate();
@@ -18,21 +19,28 @@ const Register = ({ showNav }) => {
     username: Yup.string().min(3, "Username must be at least 3 characters").max(15, "Username cannot exceed 15 characters").required("Username is required"),
     email: Yup.string().email("Invalid email format").required("Email is required"),
     password: Yup.string().min(4, "Password must be at least 4 characters").max(20, "Password cannot exceed 20 characters").required("Password is required"),
+    privacyPolicy: Yup.boolean().oneOf([true], "You must accept the privacy policy").required("Privacy policy acceptance is required"),
   });
 
-  const onSubmit = (data) => {
-    axios
-      .post("http://localhost:3001/auth", data)
-      .then(() => {
-        navigateTo("/login");
-      })
-      .catch((error) => {
-        if (error.response) {
-          alert(error.response.data.error || "An error occurred while registering");
-        } else {
-          console.error("Error:", error.message);
-        }
+  const onSubmit = async (data) => {
+    try {
+      // Wysyłanie danych rejestracyjnych
+      const registerResponse = await axios.post("http://localhost:3001/auth", data);
+
+      // Wysłanie e-maila potwierdzającego
+      await axios.post("http://localhost:3001/auth/send-confirmation-email", {
+        email: data.email,
       });
+
+      alert("Rejestracja zakończona! Sprawdź swoją skrzynkę pocztową, aby potwierdzić konto.");
+      navigateTo("/login");
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.error || "Wystąpił błąd podczas rejestracji");
+      } else {
+        console.error("Error:", error.message);
+      }
+    }
   };
 
   return (
@@ -56,6 +64,13 @@ const Register = ({ showNav }) => {
               <label htmlFor="password">Password</label>
               <Field className="defaultInput" type="password" autoComplete="off" id="inputPassword" name="password" placeholder="Your Password..." />
               <ErrorMessage name="password" component="div" className="error" />
+            </div>
+            <div className="formGroup privacyPolicyGroup">
+              <label>
+                <Field type="checkbox" name="privacyPolicy" />
+                <p>Akceptuję politykę prywatności</p>
+              </label>
+              <ErrorMessage name="privacyPolicy" component="div" className="error" />
             </div>
             <button type="submit" className="button">
               Register

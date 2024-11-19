@@ -1,0 +1,170 @@
+$color: rgb(147, 17, 0)
+$hover-color: white
+
+.mainWrapperContent
+  padding: 3rem
+  font-family: Arial, sans-serif
+  width: 80%
+  margin: auto
+
+  .about-section
+    text-align: center
+    margin-bottom: 5rem
+
+    h1
+      font-size: 3rem
+      margin-bottom: 2rem
+      color: $color
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2)
+
+    p
+      font-size: 1.4rem
+      margin-bottom: 2.5rem
+
+    .cta-button
+      background-color: $color
+      color: $hover-color
+      padding: 1rem 2rem
+      border-radius: 30px
+      text-decoration: none
+      transition: all 0.3s ease
+      font-weight: bold
+      font-size: 1.2rem
+      &:hover
+        background-color: $hover-color
+        color: $color
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2)
+
+  .benefits-section
+    background-color: #fdf6f6
+    border-radius: 10px
+    padding: 40px
+    margin-bottom: 6rem
+
+    h2
+      font-size: 2.2rem
+      margin-bottom: 2rem
+      text-align: center
+      color: $color
+
+    ul
+      list-style: none
+      padding: 0
+
+      li
+        font-size: 1.3rem
+        display: flex
+        align-items: center
+        margin-bottom: 1rem
+        color: black
+        &::before
+          content: "✓"
+          margin-right: 15px
+          color: $color
+          font-size: 1.5rem
+
+  .features-section
+    margin-bottom: 6rem
+
+    h2
+      font-size: 2.2rem
+      margin-bottom: 2rem
+      text-align: center
+      color: $color
+
+    .features-grid
+      display: grid
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))
+      gap: 30px
+
+      .feature-item
+        background: $hover-color
+        padding: 2rem
+        border-radius: 10px
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1)
+        border: 1px solid $color
+        text-align: center
+        transition: all 0.3s ease
+        &:hover
+          background-color: $color
+          color: white
+          transform: translateY(-5px)
+        &:hover h3, &:hover p
+          color: white
+
+        h3
+          font-size: 1.8rem
+          margin-bottom: 1rem
+          color: $color
+          transition: .3s
+
+        p
+          font-size: 1.2rem
+          color: black
+          transition: .3s
+
+  .reviews-section
+    margin-bottom: 6rem
+
+    h2
+      font-size: 2.2rem
+      margin-bottom: 2rem
+      text-align: center
+      color: $color
+
+    .reviews
+      blockquote
+        font-style: italic
+        border-left: 6px solid $color
+        background-color: #f9f9f9
+        padding: 20px
+        border-radius: 10px
+        margin-bottom: 2rem
+
+        footer
+          font-size: 1.2rem
+          text-align: right
+          color: $color
+
+  .call-to-action
+    background: linear-gradient(90deg, $color, #a51200)
+    border-radius: 15px
+    padding: 50px
+    text-align: center
+    color: $hover-color
+    margin-top: 5rem
+
+    h2
+      font-size: 2.8rem
+      margin-bottom: 2rem
+
+    p
+      font-size: 1.4rem
+      margin-bottom: 2.5rem
+
+    .cta-button
+      background-color: $hover-color
+      color: $color
+      padding: 1.2rem 2.5rem
+      border-radius: 30px
+      text-decoration: none
+      font-size: 1.4rem
+      font-weight: bold
+      transition: all 0.3s ease
+      &:hover
+        background-color: $color
+        color: $hover-color
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3)
+
+  section
+    opacity: 0
+    animation: fadeIn 1.5s ease forwards
+    animation-delay: 0.3s
+
+@keyframes fadeIn
+  from
+    opacity: 0
+    transform: translateY(30px)
+  to
+    opacity: 1
+    transform: translateY(0)

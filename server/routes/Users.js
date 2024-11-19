@@ -78,6 +78,103 @@ router.post("/", async (req, res) => {
   });
 });
 
+router.post("/send-confirmation-email", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Sprawdzenie, czy użytkownik istnieje
+    const user = await Users.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ message: "Użytkownik o podanym e-mailu nie istnieje" });
+    }
+
+    if (user.isConfirmed) {
+      return res.status(400).json({ message: "Konto jest już potwierdzone." });
+    }
+
+    // Generowanie tokena potwierdzającego
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "1d", // Token ważny 24 godziny
+    });
+
+    // Konfiguracja SendGrid
+    const apiKey = process.env.SENDGRID_API_KEY;
+
+    if (!apiKey) {
+      return res.status(500).json({ message: "Brak klucza API SendGrid" });
+    }
+
+    sgMail.setApiKey(apiKey);
+
+    const confirmationUrl = `http://localhost:3000/confirm-email/${token}`;
+
+    // Treść wiadomości
+    const msg = {
+      to: email,
+      from: "opielowski.maciek0309@outlook.com",
+      subject: "Potwierdzenie rejestracji w GameGalaxy",
+      html: `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Potwierdzenie Konta</title>
+            </head>
+            <body style="margin: 0; padding: 0; font-family: 'Roboto Mono', monospace; background-color: #f4f4f4;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f4f4f4; padding: 20px 0;">
+                <tr>
+                  <td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+                      <!-- Header -->
+                      <tr>
+                        <td align="center" style="padding: 20px; background-color: #931100; color: #ffffff; font-size: 24px; font-weight: bold; letter-spacing: 2px;">
+                          GameGalaxy
+                        </td>
+                      </tr>
+                      <!-- Spacer -->
+                      <tr>
+                        <td style="height: 20px;">&nbsp;</td>
+                      </tr>
+                      <!-- Content -->
+                      <tr>
+                        <td align="center" style="padding: 20px 30px; font-size: 16px; line-height: 1.5; color: #333333;">
+                          <h2 style="margin: 0; font-size: 22px; color: #931100;">Witaj ${user.username}!</h2>
+                          <p>Dziękujemy za rejestrację w GameGalaxy.</p>
+                          <p>Aby aktywować swoje konto, kliknij poniższy przycisk:</p>
+                          <a href="${confirmationUrl}" style="display: inline-block; padding: 10px 20px; background-color: #931100; color: #ffffff; text-decoration: none; border-radius: 5px; margin-top: 10px;">Potwierdź konto</a>
+                          <p>Link jest ważny przez 24 godziny. Jeśli nie zakładałeś konta, zignoruj tę wiadomość.</p>
+                        </td>
+                      </tr>
+                      <!-- Spacer -->
+                      <tr>
+                        <td style="height: 20px;">&nbsp;</td>
+                      </tr>
+                      <!-- Footer -->
+                      <tr>
+                        <td align="center" style="padding: 10px; background-color: #931100; color: #ffffff; font-size: 14px;">
+                          Pozdrawiamy, Zespół GameGalaxy
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </body>
+            </html>`,
+    };
+
+    // Wysyłanie wiadomości e-mail
+    await sgMail.send(msg);
+    console.log("E-mail wysłany");
+
+    res.status(200).json({ message: "E-mail potwierdzający został wysłany." });
+  } catch (error) {
+    console.error("Błąd przy wysyłaniu e-maila:", error);
+    res.status(500).json({ message: "Błąd przy wysyłaniu e-maila." });
+  }
+});
+
 /**
  * @swagger
  * /auth/login:

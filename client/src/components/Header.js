@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Footer from "./Footer";
+import ContentMainPage from "./ContentMainPage";
 
-const Header = ({ username }) => {
+const Header = ({ username, showNav }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const images = ["/images/first.png", "/images/second.jpg", "/images/third.jpg"];
@@ -46,7 +47,7 @@ const Header = ({ username }) => {
           <h2>{username ? "Cieszymy się, że do nas dołączyłeś!" : "Zaloguj się, żeby zobaczyć dostępne boiska"}</h2>
         </div>
       </div>
-      <div className="opinion"></div>
+      <ContentMainPage showNav={showNav} username={username} />
       <Footer />
     </>
   );
