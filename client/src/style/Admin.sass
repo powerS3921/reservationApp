@@ -1,42 +1,56 @@
+$primary-color: rgb(147, 17, 0) // Główny kolor
+$secondary-color: #f4f4f4 // Jasny szary jako tło
+$text-light: white
+$button-hover-color: rgba(147, 17, 0, 0.8)
+$text-dark: #333 // Ciemny kolor tekstu dla nagłówków i opisu
+
 .wrapperAdmin
   display: flex
-  width: 100%
-  height: 94vh
-  align-items: center
   flex-direction: column
-  margin: auto
+  align-items: center
+  justify-content: center
+  height: 100vh
+  background: $secondary-color
+  color: $text-dark
+  padding: 20px
   transition: .3s
-  .headerText
-    display: flex
-    align-items: center
-    justify-content: center
-    width: 80%
-    font-size: 30px
-    font-family: "Roboto Mono", monospace
-    height: 40vh
-  .adminLinks
-    width: 80%
-    display: flex
-    justify-content: center
-    align-items: center
-    flex-wrap: wrap
-    .adminButton
-      margin: 40px
-      height: 10vh
-      width: 200px
-      background-color: white
-      border: 1px solid black
-      cursor: pointer
-      font-size: 20px
 
-@media screen and ( max-width: 1024px )
-  .wrapperAdmin
-    margin-top: 0 !important
-  
+.headerText
+  text-align: center
+  margin-bottom: 60px // Większy odstęp między nagłówkiem a przyciskami
 
-@media screen and ( max-width: 625px )
-  .wrapperAdmin
-    .headerText
-      font-size: 25px
-      height: 30vh
-  
+  .adminTitle
+    font-size: 2.5rem
+    font-weight: bold
+    color: $primary-color
+    margin-bottom: 20px // Większy odstęp między tytułem a opisem
+
+  .adminSubtitle
+    font-size: 1.2rem
+    color: $text-dark
+
+.adminLinks
+  display: flex
+  flex-wrap: wrap
+  gap: 30px // Większe odstępy między przyciskami
+  justify-content: center
+
+.adminLink
+  text-decoration: none
+  font-size: 1.1rem
+  font-weight: bold
+  color: $text-light
+  background-color: $primary-color
+  padding: 15px 40px // Większy rozmiar przycisków
+  border-radius: 5px
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
+  transition: background-color 0.3s ease, box-shadow 0.3s ease
+  width: 220px // Stała szerokość przycisków
+  text-align: center
+  display: flex
+  justify-content: center
+  align-items: center
+
+  &:hover
+    background-color: $button-hover-color
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2)

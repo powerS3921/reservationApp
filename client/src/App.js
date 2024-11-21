@@ -31,6 +31,7 @@ import SubmitReservation from "./pages/SubmitReservation";
 import ConfirmReservation from "./pages/ConfirmReservation";
 import ConfirmationPage from "./pages/ConfirmationPage";
 import Profile from "./pages/Profile";
+import ConfirmEmail from "./pages/ConfirmEmail";
 
 function App() {
   const [authState, setAuthState] = useState({ username: "", id: "", status: false });
@@ -204,7 +205,7 @@ function App() {
             <Route path="/resetpassword" element={<ResetPassword showNav={showNav} />} />
             <Route path="/fields" element={<AllFieldList showNav={showNav} />} />
             <Route path="/fields/:id" element={<FieldList showNav={showNav} />} />
-            <Route path="/field-reservations/:id" element={<FieldReservationList showNav={showNav} />} />
+            <Route path="/field-reservations" element={<FieldReservationList showNav={showNav} />} />
             <Route path="/add-field/:id" element={<AddField showNav={showNav} />} />
             <Route path="/add-facility" element={<AddSportFacility showNav={showNav} />} />
             <Route path="/edit-facility/:id" element={<EditFacilities showNav={showNav} />} />
@@ -216,6 +217,7 @@ function App() {
             <Route path="/confirm-reservation" element={<ConfirmReservation showNav={showNav} userID={usernameId} />} />
             <Route path="/confirmation-page" element={<ConfirmationPage showNav={showNav} />} />
             <Route path="/profile/:id" element={<Profile showNav={showNav} username={username} />} />
+            <Route path="/confirm-email/:token" element={<ConfirmEmail showNav={showNav} />} />
           </Routes>
         </Router>
       </AuthContext.Provider>

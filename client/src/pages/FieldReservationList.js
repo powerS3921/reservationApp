@@ -1,21 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const FieldReservationList = () => {
-  const { id } = useParams();
   const [reservations, setReservations] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [sports, setSports] = useState([]);
+  const [filters, setFilters] = useState({
+    city: "all",
+    sport: "all",
+    isPaid: "all",
+    isActive: "all",
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
+    fetchCities();
+    fetchSports();
+    fetchReservations();
+  }, [filters]);
+
+  const fetchReservations = () => {
     axios
-      .get("http://localhost:3001/reservations")
+      .get("http://localhost:3001/reservations", { params: filters })
       .then((response) => {
-        const filteredReservations = response.data.filter((reservation) => reservation.UserId === parseInt(id, 10));
-        setReservations(filteredReservations);
+        setReservations(response.data);
       })
-      .catch((error) => console.error(error));
-  }, []);
+      .catch((error) => console.error("Error fetching reservations:", error));
+    console.log(filters);
+  };
+
+  const fetchCities = () => {
+    axios
+      .get("http://localhost:3001/api/cities")
+      .then((response) => setCities(response.data))
+      .catch((error) => console.error("Error fetching cities:", error));
+  };
+
+  const fetchSports = () => {
+    axios
+      .get("http://localhost:3001/api/sports")
+      .then((response) => setSports(response.data))
+      .catch((error) => console.error("Error fetching sports:", error));
+  };
 
   const handleEdit = (reservation) => {
     navigate(`/edit-reservation/${reservation.id}`, { state: { reservation } });
@@ -30,37 +57,62 @@ const FieldReservationList = () => {
       .catch((error) => console.error(error));
   };
 
-  const formatDateTime = (dateTimeString) => {
-    const options = { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" };
-    return new Date(dateTimeString).toLocaleString("en-US", options);
-  };
-
-  const isToday = (date) => {
-    const today = new Date();
-    const targetDate = new Date(date);
-    return today.getFullYear() === targetDate.getFullYear() && today.getMonth() === targetDate.getMonth() && today.getDate() === targetDate.getDate();
+  const formatDateTime = (timeString) => {
+    // Rozdziel ciąg "19:00:00" na części
+    const [hours, minutes] = timeString.split(":");
+    // Zwróć tylko godzinę i minuty
+    return `${hours}:${minutes}`;
   };
 
   return (
     <div className="mainWrapper">
       <h1 className="h1Header">Field Reservations</h1>
+      <div className="filters">
+        <select value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })}>
+          <option value="all">All Cities</option>
+          {cities.map((city) => (
+            <option key={city.id} value={city.id}>
+              {city.name}
+            </option>
+          ))}
+        </select>
+        <select value={filters.sport} onChange={(e) => setFilters({ ...filters, sport: e.target.value })}>
+          <option value="all">All Sports</option>
+          {sports.map((sport) => (
+            <option key={sport.id} value={sport.id}>
+              {sport.name}
+            </option>
+          ))}
+        </select>
+        <select value={filters.isPaid} onChange={(e) => setFilters({ ...filters, isPaid: e.target.value })}>
+          <option value="all">All</option>
+          <option value="true">Paid</option>
+          <option value="false">Unpaid</option>
+        </select>
+        <select value={filters.isActive} onChange={(e) => setFilters({ ...filters, isActive: e.target.value })}>
+          <option value="all">All</option>
+          <option value="true">Active</option>
+          <option value="false">Historical</option>
+        </select>
+        <button onClick={fetchReservations}>Filter</button>
+      </div>
       <ul>
         {reservations.length > 0 ? (
           reservations.map((reservation) => (
             <li key={reservation.id}>
-              <span>Field ID: {reservation.FieldId}</span>
-              <span>Start: {formatDateTime(reservation.startDate)}</span>
-              <span>End: {formatDateTime(reservation.endDate)}</span>
-              <button onClick={() => handleEdit(reservation)} disabled={isToday(reservation.startDate)}>
-                Edit
-              </button>
-              <button onClick={() => handleDelete(reservation.id)} disabled={isToday(reservation.startDate)}>
-                Delete
-              </button>
+              <span>{reservation.Field.sportsFacility.name}</span>
+              <span>{reservation.Field.sportsFacility.address}</span>
+              <span>{reservation.Field.sportsFacility.City.name}</span>
+              <span>{reservation.reservationDate}</span>
+              <span>Data: {reservation.Field.Sport.name}</span>
+              <span>Start: {formatDateTime(reservation.startTime)}</span>
+              <span>End: {formatDateTime(reservation.endTime)}</span>
+              <button onClick={() => handleEdit(reservation)}>Edit</button>
+              <button onClick={() => handleDelete(reservation.id)}>Delete</button>
             </li>
           ))
         ) : (
-          <p>Nie masz żadnej rezerwacji, zarezerwuj sobie coś!</p>
+          <p>No reservations found.</p>
         )}
       </ul>
     </div>

@@ -38,8 +38,8 @@
 
 const express = require("express");
 const router = express.Router();
-const { Reservation, Field, SportsFacility } = require("../models");
-const { Op } = require("sequelize");
+const { Reservation, Field, SportsFacility, City, Sport } = require("../models");
+const { Op, where } = require("sequelize");
 const sgMail = require("@sendgrid/mail");
 const db = require("../db");
 require("dotenv").config();
@@ -60,6 +60,74 @@ require("dotenv").config();
  *               items:
  *                 $ref: '#/components/schemas/Reservation'
  */
+
+router.get("/", async (req, res) => {
+  const { city, sport, isPaid, isActive } = req.query;
+  console.log(city, sport, isPaid, isActive);
+
+  try {
+    const whereClause = {};
+
+    // Dodaj filtr dla opłaconych rezerwacji, jeśli podano wartość inną niż "all"
+    if (isPaid !== undefined && isPaid !== "all") {
+      whereClause.czyZaplacono = isPaid === "true";
+    }
+
+    // Dodaj filtr dla miasta, jeśli podano wartość inną niż "all"
+    if (city && city !== "all") {
+      whereClause["$Field.SportsFacility.City.id$"] = city;
+    }
+
+    // Dodaj filtr dla sportu, jeśli podano wartość inną niż "all"
+    if (sport && sport !== "all") {
+      whereClause["$Field.Sport.id$"] = sport;
+    }
+
+    // Dodaj filtr dla aktywnych/historii, jeśli podano wartość inną niż "all"
+    if (isActive !== undefined && isActive !== "all") {
+      const now = new Date();
+      const currentDate = now.toISOString().split("T")[0];
+      const currentTime = now.toTimeString().split(" ")[0];
+
+      if (isActive === "true") {
+        whereClause[Op.or] = [{ reservationDate: { [Op.gt]: currentDate } }, { reservationDate: currentDate, endTime: { [Op.gt]: currentTime } }];
+      } else {
+        whereClause[Op.and] = [{ reservationDate: { [Op.lt]: currentDate } }, { reservationDate: currentDate, endTime: { [Op.lte]: currentTime } }];
+      }
+    }
+    console.log(JSON.stringify(whereClause, null, 2));
+    const reservations = await Reservation.findAll({
+      where: whereClause,
+      include: [
+        {
+          model: Field,
+          as: "Field", // Alias dla modelu Field
+          include: [
+            {
+              model: SportsFacility,
+              as: "sportsFacility", // Alias dla SportsFacility
+              include: [
+                {
+                  model: City,
+                  as: "City", // Alias dla City
+                },
+              ],
+            },
+            {
+              model: Sport,
+              as: "Sport",
+            },
+          ],
+        },
+      ],
+    });
+
+    res.json(reservations);
+  } catch (error) {
+    console.error("Error fetching reservations:", error);
+    res.status(500).json({ error: "Error fetching reservations" });
+  }
+});
 
 router.post("/send-confirmation-email", async (req, res) => {
   const { sessionId } = req.body;

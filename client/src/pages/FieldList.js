@@ -71,7 +71,7 @@ const FieldList = ({ showNav }) => {
   };
 
   return (
-    <div className="mainWrapper" style={showNav ? { marginTop: "-1vh" } : { marginTop: "5vh" }}>
+    <div className="mainWrapper" style={showNav ? { marginTop: "0vh" } : { marginTop: "6vh" }}>
       <h1 className="h1Header">Boiska</h1>
 
       <div className="filters">

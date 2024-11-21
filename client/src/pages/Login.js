@@ -13,15 +13,22 @@ const Login = ({ showNav }) => {
 
   const login = () => {
     const data = { username, password };
-    axios.post("http://localhost:3001/auth/login", data).then((response) => {
-      if (response.data.error) {
-        alert(response.data.error);
-      } else {
-        localStorage.setItem("accessToken", response.data.token);
-        setAuthState({ username: response.data.username, id: response.data.id, status: true });
-        navigateTo("/");
-      }
-    });
+    axios
+      .post("http://localhost:3001/auth/login", data)
+      .then((response) => {
+        if (response.data.error) {
+          alert(response.data.error); // Wyświetlenie błędu z serwera
+        } else {
+          localStorage.setItem("accessToken", response.data.token);
+          setAuthState({ username: response.data.username, id: response.data.id, status: true });
+          navigateTo("/");
+        }
+      })
+      .catch((error) => {
+        // Obsługa błędów sieciowych lub serwera
+        console.error(error);
+        alert("Wystąpił błąd. Jeśli nie zaaktywowałeś swojego konta, zrób to!");
+      });
   };
 
   return (

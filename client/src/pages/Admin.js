@@ -1,28 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import axios from "axios";
+import React from "react";
+import { Link } from "react-router-dom";
 import "../style/Admin.sass";
 
 const Admin = ({ showNav }) => {
-  let { id } = useParams();
-
   return (
     <div className="wrapperAdmin" style={showNav ? { marginTop: "-6vh" } : { marginTop: "0vh" }}>
       <div className="headerText">
-        <h1>Panel Admina</h1>
+        <h1 className="adminTitle">Panel Administratora</h1>
+        <p className="adminSubtitle">Zarządzaj obiektami sportowymi i rezerwacjami w jednym miejscu</p>
       </div>
       <div className="adminLinks">
-        <Link to={`/fields`}>
-          <button className="adminButton">Boiska</button>
+        <Link to={`/fields`} className="adminLink">
+          Boiska
         </Link>
-        <Link to={`/add-facility`}>
-          <button className="adminButton">Dodaj obiekt sportowy</button>
+        <Link to={`/add-facility`} className="adminLink">
+          Dodaj Obiekt Sportowy
         </Link>
-        <Link to={`/facility`}>
-          <button className="adminButton">Obiekty sportowe</button>
+        <Link to={`/facility`} className="adminLink">
+          Obiekty Sportowe
         </Link>
-        <Link to={`/field-reservations`}>
-          <button className="adminButton">Rezerwacje</button>
+        <Link to={`/field-reservations`} className="adminLink">
+          Rezerwacje
         </Link>
       </div>
     </div>

@@ -1,16 +1,110 @@
-.day-hours
-  input
-    padding: 10px
-    margin: 10px
-.h2Header
-  margin: 20px 0 40px
+$primary-color: rgb(147, 17, 0)
+$secondary-color: #f9f9f9
+$text-color: #333
+$button-hover-bg: rgba(147, 17, 0, 0.8)
+$input-border: #ccc
+
+.mainWrapper
   display: flex
   align-items: center
   flex-direction: column
-  &::after
-    height: 4px
-    width: 15px
-    background-color: rgb(147, 17, 0)
-    content: ""
-    display: block
-    margin-top: 20px
+  width: 80%
+  padding: 20px
+  transition: 0.3s
+  background-color: $secondary-color
+
+  .h1Header
+    padding: 20px
+    font-size: 2rem
+    font-weight: bold
+    color: $primary-color
+    text-align: center
+    position: relative
+    &::after
+      content: ""
+      display: block
+      height: 3px
+      width: 50px
+      background-color: $primary-color
+      margin: 10px auto 0
+
+  .wrapperInput
+    display: flex
+    flex-direction: column
+    gap: 20px
+    width: 100%
+    max-width: 600px
+    padding: 20px
+    background: white
+    border-radius: 15px
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1)
+
+    .defaultInput
+      width: 100%
+      padding: 10px 15px
+      border: 1px solid $input-border
+      border-radius: 5px
+      font-size: 16px
+      color: $text-color
+      transition: border-color 0.3s ease
+      &:focus
+        border-color: $primary-color
+        outline: none
+
+    .h2Header
+      margin: 30px 0 20px
+      font-size: 1.5rem
+      font-weight: bold
+      color: $primary-color
+      text-align: center
+      &::after
+        content: ""
+        display: block
+        height: 3px
+        width: 40px
+        background-color: $primary-color
+        margin: 10px auto 0
+
+    .day-hours
+      display: flex
+      flex-direction: column
+      align-items: center
+      gap: 10px
+      background: $secondary-color
+      padding: 15px
+      border-radius: 10px
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1)
+
+      h3
+        font-size: 1.2rem
+        font-weight: bold
+        color: $primary-color
+        margin-bottom: 10px
+
+      input[type="time"]
+        width: 100%
+        max-width: 250px
+        padding: 10px
+        font-size: 16px
+        border: 1px solid $input-border
+        border-radius: 5px
+        transition: border-color 0.3s ease
+        &:focus
+          border-color: $primary-color
+          outline: none
+
+    .button
+      margin-top: 20px
+      padding: 12px 30px
+      font-size: 16px
+      font-weight: bold
+      color: white
+      background-color: $primary-color
+      border: none
+      border-radius: 10px
+      cursor: pointer
+      text-align: center
+      transition: background-color 0.3s ease, box-shadow 0.3s ease
+      &:hover
+        background-color: $button-hover-bg
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)

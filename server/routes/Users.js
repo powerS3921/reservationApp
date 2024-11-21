@@ -33,8 +33,12 @@ const router = express.Router();
 const { Users } = require("../models");
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const { validateToken } = require("../middlewares/AuthMiddleware");
 const { Op } = require("sequelize");
+const sgMail = require("@sendgrid/mail");
+
+require("dotenv").config();
 
 /**
  * @swagger
@@ -95,7 +99,7 @@ router.post("/send-confirmation-email", async (req, res) => {
 
     // Generowanie tokena potwierdzającego
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1d", // Token ważny 24 godziny
+      expiresIn: "1d",
     });
 
     // Konfiguracja SendGrid
@@ -175,6 +179,34 @@ router.post("/send-confirmation-email", async (req, res) => {
   }
 });
 
+router.get("/confirm-email/:token", async (req, res) => {
+  const { token } = req.params;
+
+  try {
+    // Weryfikacja tokena
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.userId;
+
+    // Pobranie użytkownika i aktualizacja statusu `isConfirmed`
+    const user = await Users.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    if (user.isConfirmed) {
+      return res.status(400).json({ error: "Account is already confirmed." });
+    }
+
+    user.isConfirmed = true;
+    await user.save();
+
+    res.status(200).json({ message: "Account successfully confirmed." });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ error: "Invalid or expired token." });
+  }
+});
+
 /**
  * @swagger
  * /auth/login:
@@ -211,10 +243,22 @@ router.post("/login", async (req, res) => {
     },
   });
 
-  if (!user) return res.json({ error: "User Doesn't exist" });
+  if (!user) {
+    return res.status(404).json({ error: "User doesn't exist" });
+  }
 
-  bcrypt.compare(password, user.password).then(async (match) => {
-    if (!match) return res.json({ error: "Wrong username and password combination!" });
+  // Sprawdzenie, czy konto jest potwierdzone
+  if (!user.isConfirmed) {
+    return res.status(403).json({ error: "Your account is not confirmed. Please check your email to confirm your account." });
+  }
+
+  // Sprawdzenie hasła
+  bcrypt.compare(password, user.password).then((match) => {
+    if (!match) {
+      return res.status(401).json({ error: "Wrong username and password combination!" });
+    }
+
+    // Generowanie tokena JWT
     const accessToken = sign({ username: user.username, id: user.id }, "importantsecret");
     res.json({ token: accessToken, username: user.username, id: user.id });
   });

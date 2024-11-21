@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import "../style/FieldList.sass";
+import "../style/Facilities.sass";
 
 const SportsFacilityList = ({ showNav }) => {
   const [facilities, setFacilities] = useState([]);
