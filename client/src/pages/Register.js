@@ -68,7 +68,7 @@ const Register = ({ showNav }) => {
             <div className="formGroup privacyPolicyGroup">
               <label>
                 <Field type="checkbox" name="privacyPolicy" />
-                <p>Akceptuję politykę prywatności</p>
+                <p className="privacyPolicy">Akceptuję politykę prywatności</p>
               </label>
               <ErrorMessage name="privacyPolicy" component="div" className="error" />
             </div>

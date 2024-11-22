@@ -90,9 +90,23 @@ router.get("/", async (req, res) => {
       const currentTime = now.toTimeString().split(" ")[0];
 
       if (isActive === "true") {
-        whereClause[Op.or] = [{ reservationDate: { [Op.gt]: currentDate } }, { reservationDate: currentDate, endTime: { [Op.gt]: currentTime } }];
+        // Aktywne rezerwacje (przyszłe lub jeszcze trwające dziś)
+        whereClause[Op.or] = [
+          { reservationDate: { [Op.gt]: currentDate } }, // Rezerwacje w przyszłości
+          {
+            reservationDate: currentDate, // Rezerwacje dzisiejsze, które jeszcze trwają
+            endTime: { [Op.gt]: currentTime },
+          },
+        ];
       } else {
-        whereClause[Op.and] = [{ reservationDate: { [Op.lt]: currentDate } }, { reservationDate: currentDate, endTime: { [Op.lte]: currentTime } }];
+        // Historyczne rezerwacje (zakończone lub w przeszłości)
+        whereClause[Op.or] = [
+          { reservationDate: { [Op.lt]: currentDate } }, // Rezerwacje w przeszłości
+          {
+            reservationDate: currentDate, // Dzisiejsze, które już się zakończyły
+            endTime: { [Op.lte]: currentTime },
+          },
+        ];
       }
     }
     console.log(JSON.stringify(whereClause, null, 2));

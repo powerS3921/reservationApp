@@ -7,7 +7,8 @@ $color: rgb(147, 17, 0)
   display: flex
   align-items: center
   flex-direction: column
-  padding: 50px
+  padding: 200px 50px
+  animation: fadeIn 1.5s ease forwards
   .button
     flex-basis: calc(25% - 40px)
     height: 50px
@@ -265,3 +266,12 @@ $color: rgb(147, 17, 0)
       .citySection
         .sport
           width: 80%
+
+
+@keyframes fadeIn
+  from
+    opacity: 0
+    transform: translateY(30px)
+  to
+    opacity: 1
+    transform: translateY(0)
