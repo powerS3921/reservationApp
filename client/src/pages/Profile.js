@@ -36,7 +36,6 @@ const Profile = ({ showNav, username }) => {
           params: { id },
         });
         setUnActiveReservations(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Błąd podczas pobierania aktywnych rezerwacji:", error);
       }
@@ -52,7 +51,6 @@ const Profile = ({ showNav, username }) => {
           params: { id },
         });
         setUnPaymentReservation(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Błąd podczas pobierania aktywnych rezerwacji:", error);
       }

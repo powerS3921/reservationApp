@@ -212,7 +212,7 @@ function App() {
             <Route path="/facility" element={<Facilities showNav={showNav} />} />
             <Route path="/add-field-reservation/:id" element={<AddFieldReservation />} />
             <Route path="/edit-field/:id" element={<EditField showNav={showNav} />} />
-            <Route path="/edit-reservation/:id" element={<EditFieldReservation />} />
+            <Route path="/edit-reservation/:id" element={<EditFieldReservation showNav={showNav} />} />
             <Route path="/submit-resservation/:id" element={<SubmitReservation showNav={showNav} />} />
             <Route path="/confirm-reservation" element={<ConfirmReservation showNav={showNav} userID={usernameId} />} />
             <Route path="/confirmation-page" element={<ConfirmationPage showNav={showNav} />} />

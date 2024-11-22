@@ -66,7 +66,6 @@ const ReservationBox = ({ showNav }) => {
       setFields(response.data.fields);
       setTotalPages(response.data.totalPages);
       setVisibleH2(1);
-      console.log(response.data);
     } catch (error) {
       console.error("Błąd podczas pobierania boisk:", error);
     }

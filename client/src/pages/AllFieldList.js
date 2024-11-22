@@ -30,7 +30,6 @@ const AllFieldList = ({ showNav }) => {
       .then((response) => {
         setFields(response.data);
         setLoading(false); // Reset loading state
-        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching fields:", error);

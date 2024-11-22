@@ -1,0 +1,30 @@
+.errorMessage
+  color: red
+  font-size: 1rem
+  margin-bottom: 15px
+  text-align: center
+
+.defaultInput
+  width: 100%
+  max-width: 400px
+  padding: 10px
+  margin: 10px 0
+  font-size: 1rem
+  border: 1px solid rgb(147, 17, 0)
+  border-radius: 5px
+  background-color: white
+  &:focus
+    outline: none
+    border-color: darken(rgb(147, 17, 0), 10%)
+
+.button
+  padding: 10px 20px
+  font-size: 1rem
+  border: none
+  border-radius: 5px
+  background-color: rgb(147, 17, 0)
+  color: white
+  cursor: pointer
+  transition: background-color 0.3s ease
+  &:hover
+    background-color: darken(rgb(147, 17, 0), 10%)

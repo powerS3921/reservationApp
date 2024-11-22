@@ -1,0 +1,100 @@
+$primary-color: rgb(147, 17, 0)
+$background-color: #f9f9f9
+$text-color: #333
+
+.mainWrapper
+  display: flex
+  flex-direction: column
+  align-items: center
+  padding: 20px
+  background-color: $background-color
+  min-height: 100vh
+
+.h1Header
+  font-size: 2.5rem
+  font-weight: bold
+  color: $primary-color
+  margin-bottom: 20px
+  text-align: center
+  &::after
+    content: ""
+    display: block
+    width: 50px
+    height: 3px
+    background-color: $primary-color
+    margin: 10px auto
+
+.filters
+  display: flex
+  flex-wrap: wrap
+  justify-content: center
+  margin-bottom: 30px
+  gap: 15px
+  select
+    padding: 10px
+    font-size: 1rem
+    border: 1px solid $primary-color
+    border-radius: 5px
+    background-color: white
+    color: $text-color
+    cursor: pointer
+    &:hover
+      border-color: darken($primary-color, 10%)
+
+  button
+    padding: 10px 20px
+    font-size: 1rem
+    border: none
+    border-radius: 5px
+    background-color: $primary-color
+    color: white
+    cursor: pointer
+    transition: background-color 0.3s ease
+    &:hover
+      background-color: darken($primary-color, 10%)
+
+ul.reservationList
+  list-style: none
+  padding: 0
+  margin: 0
+  display: flex
+  flex-direction: column
+  gap: 20px
+  width: 80%
+  max-width: 1200px
+  text-align: center
+
+li.reservationListItem
+  background-color: white
+  border: 1px solid $primary-color
+  border-radius: 10px
+  padding: 15px
+  display: flex
+  flex-direction: column
+  gap: 10px
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1)
+  span
+    font-size: 1rem
+    color: $text-color
+    &:nth-child(1)
+      font-weight: bold
+      color: $primary-color
+
+  button
+    padding: 10px
+    font-size: 0.9rem
+    border: 1px solid $primary-color
+    border-radius: 5px
+    background-color: white
+    color: $primary-color
+    cursor: pointer
+    transition: all 0.3s ease
+    &:hover
+      background-color: $primary-color
+      color: white
+
+p
+  font-size: 1.2rem
+  color: $text-color
+  margin-top: 20px
+  text-align: center

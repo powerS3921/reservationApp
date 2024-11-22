@@ -15,24 +15,24 @@ const Footer = () => {
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laudantium numquam quo ratione quasi aliquid accusamus assumenda optio esse cumque quas? Lorem ipsum dolor sit
             amet, consectetur adipisicing elit. Officiis unde recusandae voluptatum nemo, nostrum perspiciatis et excepturi ex enim velit alias fugiat ipsam earum ducimus iste
           </p>
-          <ul className="icons">
-            <li>
-              <a href="http://www.facebook.com" target="_blank" rel="noreferrer">
+          <ul className="footerIcons">
+            <li className="liIcons">
+              <a href="http://www.facebook.com" target="_blank" rel="noreferrer" className="soloIcon">
                 <FaFacebookF />
               </a>
             </li>
-            <li>
-              <a href="http://www.linkedin.com" target="_blank" rel="noreferrer">
+            <li className="liIcons">
+              <a href="http://www.linkedin.com" target="_blank" rel="noreferrer" className="soloIcon">
                 <FaLinkedinIn />
               </a>
             </li>
-            <li>
-              <a href="http://www.twitter.com" target="_blank" rel="noreferrer">
+            <li className="liIcons">
+              <a href="http://www.twitter.com" target="_blank" rel="noreferrer" className="soloIcon">
                 <FaTwitter />
               </a>
             </li>
-            <li>
-              <a href="http://www.youtube.com" target="_blank" rel="noreferrer">
+            <li className="liIcons">
+              <a href="http://www.youtube.com" target="_blank" rel="noreferrer" className="soloIcon">
                 <FaYoutube />
               </a>
             </li>

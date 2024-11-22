@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
   // Associations
   Reservation.associate = (models) => {
     Reservation.belongsTo(models.Field, { foreignKey: { allowNull: false } });
-    Reservation.belongsTo(models.Users, { foreignKey: { allowNull: false } });
+    Reservation.belongsTo(models.Users, { as: "User", foreignKey: { allowNull: false } });
   };
 
   return Reservation;

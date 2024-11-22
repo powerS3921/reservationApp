@@ -38,7 +38,7 @@
 
 const express = require("express");
 const router = express.Router();
-const { Reservation, Field, SportsFacility, City, Sport } = require("../models");
+const { Reservation, Field, SportsFacility, City, Sport, Users } = require("../models");
 const { Op, where } = require("sequelize");
 const sgMail = require("@sendgrid/mail");
 const db = require("../db");
@@ -118,6 +118,10 @@ router.get("/", async (req, res) => {
               as: "Sport",
             },
           ],
+        },
+        {
+          model: Users,
+          as: "User",
         },
       ],
     });
@@ -461,6 +465,25 @@ router.put("/update-payment", async (req, res) => {
   } catch (error) {
     console.error("Error confirming payment:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { reservationDate, startTime, endTime } = req.body;
+
+  try {
+    // Aktualizacja rezerwacji w bazie
+    const updatedReservation = await Reservation.update({ reservationDate, startTime, endTime }, { where: { id } });
+
+    if (updatedReservation[0] === 0) {
+      return res.status(404).json({ error: "Reservation not found or no changes applied." });
+    }
+
+    res.status(200).json({ message: "Reservation updated successfully" });
+  } catch (error) {
+    console.error("Error updating reservation:", error);
+    res.status(500).json({ error: "Failed to update reservation." });
   }
 });
 

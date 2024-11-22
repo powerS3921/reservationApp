@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../style/FieldReservationList.sass";
 
-const FieldReservationList = () => {
+const FieldReservationList = ({ showNav }) => {
   const [reservations, setReservations] = useState([]);
   const [cities, setCities] = useState([]);
   const [sports, setSports] = useState([]);
@@ -18,7 +19,7 @@ const FieldReservationList = () => {
     fetchCities();
     fetchSports();
     fetchReservations();
-  }, [filters]);
+  }, []);
 
   const fetchReservations = () => {
     axios
@@ -27,7 +28,6 @@ const FieldReservationList = () => {
         setReservations(response.data);
       })
       .catch((error) => console.error("Error fetching reservations:", error));
-    console.log(filters);
   };
 
   const fetchCities = () => {
@@ -65,7 +65,7 @@ const FieldReservationList = () => {
   };
 
   return (
-    <div className="mainWrapper">
+    <div className="mainWrapper" style={showNav ? { marginTop: "0vh" } : { marginTop: "6vh" }}>
       <h1 className="h1Header">Field Reservations</h1>
       <div className="filters">
         <select value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })}>
@@ -96,17 +96,18 @@ const FieldReservationList = () => {
         </select>
         <button onClick={fetchReservations}>Filter</button>
       </div>
-      <ul>
+      <ul className="reservationList">
         {reservations.length > 0 ? (
           reservations.map((reservation) => (
-            <li key={reservation.id}>
-              <span>{reservation.Field.sportsFacility.name}</span>
-              <span>{reservation.Field.sportsFacility.address}</span>
-              <span>{reservation.Field.sportsFacility.City.name}</span>
-              <span>{reservation.reservationDate}</span>
-              <span>Data: {reservation.Field.Sport.name}</span>
-              <span>Start: {formatDateTime(reservation.startTime)}</span>
-              <span>End: {formatDateTime(reservation.endTime)}</span>
+            <li key={reservation.id} className="reservationListItem">
+              <span>Użytkownik: {reservation.User.username}</span>
+              <span>Nazwa obiektu: {reservation.Field.sportsFacility.name}</span>
+              <span>Ulica: {reservation.Field.sportsFacility.address}</span>
+              <span>Miasto: {reservation.Field.sportsFacility.City.name}</span>
+              <span>Sport: {reservation.Field.Sport.name}</span>
+              <span>Data: {reservation.reservationDate}</span>
+              <span>Godzina startu rezerwacji: {formatDateTime(reservation.startTime)}</span>
+              <span>Godzina końca rezerwacji: {formatDateTime(reservation.endTime)}</span>
               <button onClick={() => handleEdit(reservation)}>Edit</button>
               <button onClick={() => handleDelete(reservation.id)}>Delete</button>
             </li>
