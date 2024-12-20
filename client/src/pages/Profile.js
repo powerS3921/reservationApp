@@ -98,7 +98,7 @@ const Profile = ({ showNav, username }) => {
               </div>
             </>
           ) : (
-            <h1 className="headerh2">Brak rezerwacji, zarezerwuj coś!</h1>
+            <h1 className="headerh22">Brak rezerwacji, zarezerwuj coś!</h1>
           )}
         </div>
       </div>
