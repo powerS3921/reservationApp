@@ -25,7 +25,7 @@ const ConfirmationPage = ({ showNav }) => {
 
   return (
     <>
-      <div className="reservationBox" style={showNav ? { marginTop: "15vh" } : { marginTop: "21vh" }}>
+      <div className="confirmationPageBox reservationBox" style={showNav ? { marginTop: "15vh" } : { marginTop: "21vh" }}>
         <h1 className="headerh2">Rezerwacja została potwierdzona oraz opłacona. Potwierdzenie zostało wysłane mailem</h1>
         <a href="/" className="link">
           Wróć na stronę główną

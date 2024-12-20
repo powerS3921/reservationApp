@@ -32,6 +32,7 @@ import ConfirmReservation from "./pages/ConfirmReservation";
 import ConfirmationPage from "./pages/ConfirmationPage";
 import Profile from "./pages/Profile";
 import ConfirmEmail from "./pages/ConfirmEmail";
+import { set } from "date-fns";
 
 function App() {
   const [authState, setAuthState] = useState({ username: "", id: "", status: false });
@@ -72,6 +73,7 @@ function App() {
   const switchClassActive = () => {
     setActiveClassNav(!activeClassNav);
     setActivePeopleIcon(true);
+    setShowNav(false);
   };
 
   const switchClassActiveToFalse = () => {
@@ -121,8 +123,9 @@ function App() {
 
   const switchPeopleClassActiveToFalse = () => {
     setActivePeopleIcon(false);
+    setActiveClassNav(false);
+    setShowNav(false);
   };
-
   return (
     <div className="App">
       <AuthContext.Provider value={{ authState, setAuthState }}>

@@ -67,33 +67,39 @@ const Profile = ({ showNav, username }) => {
           <h2 className="profileHeaderCapture">{username}</h2>
         </div>
         <div className="reports">
-          <div className="activeReservation">
-            {activeReservations.length > 0 ? (
-              <>
-                <h1 className="headerh2">Aktywne rezerwacje</h1>
+          {activeReservations.length > 0 || unActiveReservations > 0 || unPaymentReservation > 0 ? (
+            <>
+              <div className="activeReservation">
+                {activeReservations.length > 0 ? (
+                  <>
+                    <h1 className="headerh2">Aktywne rezerwacje</h1>
 
-                <ActiveReservationTable activeReservations={activeReservations} setActiveReservations={setActiveReservations} />
-              </>
-            ) : null}
-          </div>
-          <div className="unActiveReservation">
-            {unActiveReservations.length > 0 ? (
-              <>
-                <h1 className="headerh2">Historyczne rezerwacje</h1>
+                    <ActiveReservationTable activeReservations={activeReservations} setActiveReservations={setActiveReservations} />
+                  </>
+                ) : null}
+              </div>
+              <div className="unActiveReservation">
+                {unActiveReservations.length > 0 ? (
+                  <>
+                    <h1 className="headerh2">Historyczne rezerwacje</h1>
 
-                <UnActiveReservationTable unActiveReservations={unActiveReservations} setUnActiveReservations={setUnActiveReservations} />
-              </>
-            ) : null}
-          </div>
-          <div className="unPaymentReservation">
-            {unPaymentReservation.length > 0 ? (
-              <>
-                <h1 className="headerh2">Nieopłacone rezerwacje</h1>
+                    <UnActiveReservationTable unActiveReservations={unActiveReservations} setUnActiveReservations={setUnActiveReservations} />
+                  </>
+                ) : null}
+              </div>
+              <div className="unPaymentReservation">
+                {unPaymentReservation.length > 0 ? (
+                  <>
+                    <h1 className="headerh2">Nieopłacone rezerwacje</h1>
 
-                <UnPaymentReservationTable unPaymentReservation={unPaymentReservation} setUnPaymentReservation={setUnPaymentReservation} />
-              </>
-            ) : null}
-          </div>
+                    <UnPaymentReservationTable unPaymentReservation={unPaymentReservation} setUnPaymentReservation={setUnPaymentReservation} />
+                  </>
+                ) : null}
+              </div>
+            </>
+          ) : (
+            <h1 className="headerh2">Brak rezerwacji, zarezerwuj coś!</h1>
+          )}
         </div>
       </div>
       <Footer />

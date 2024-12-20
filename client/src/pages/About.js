@@ -7,7 +7,7 @@ const About = ({ showNav }) => {
   return (
     <>
       <SlimHeader h1={"Dowiedz się więcej o nas!"} />
-      <div className="aboutWrapper" style={showNav ? { marginTop: "50vh" } : { marginTop: "56vh" }}>
+      <div className="aboutWrapper" style={showNav ? { marginTop: "50vh" } : { marginTop: "50vh" }}>
         {/* Sekcja wstępna */}
         <section className="intro-section">
           <h1>Kim jesteśmy?</h1>
